@@ -8,7 +8,9 @@ export default defineNuxtConfig({
   },
 
 
-  extends: [],
+  extends: [
+    './app/modules/auth'
+  ],
 
   app: {
     head: {
@@ -21,21 +23,21 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/ui', '@nuxtjs/google-fonts', '@nuxtjs/i18n', '@pinia/nuxt',],
+  modules: ['@nuxtjs/google-fonts', '@nuxtjs/i18n', '@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', '@nuxt/icon'],
 
   pinia: {
-    storesDirs: ['~/stores/**', '~/layers/**/stores/**'],
+    storesDirs: ['~/stores/**', '~models/**/stores/**'],
   },
 
   css: ['~/assets/css/tailwind.css'],
 
   i18n: {
-    strategy: 'prefix',
+    strategy: 'no_prefix',
     locales: [
       // { code: "en", language: 'en-US', name: "English", file: "en.ts", dir: "ltr" }, // Английский
       { code: "ru", language: 'ru-RU', name: "Русский", file: "ru.ts", dir: "ltr" }, // Русский
     ],
-    defaultLocale: "en",
+    defaultLocale: "ru",
     detectBrowserLanguage: false,
     langDir: "locales",
     vueI18n: "./i18n.config.ts"
@@ -45,7 +47,7 @@ export default defineNuxtConfig({
     classSuffix: '',
     preference: 'system',
     fallback: 'light',
-    storageKey: 'color-mode',
+    storageKey: 'nuxt-color-mode',
   },
 
   tailwindcss: {

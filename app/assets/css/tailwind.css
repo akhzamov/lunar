@@ -376,8 +376,46 @@
 }
 
 body {
-	/* @apply bg-dark-eerie-black-color; */
+	@apply bg-c-gray-t-50 text-c-gray-t-900 dark:bg-c-gray-t-900 dark:text-c-gray-t-50;
 	font-family: 'Inter';
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0px 1000px var(--gray-200) inset !important;
+	-webkit-text-fill-color: var(--gray-t-900) !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0px 1000px var(--gray-t-600) inset !important;
+	-webkit-text-fill-color: var(--gray-t-50) !important;
+}
+
+/* Стили для Firefox */
+input:-moz-autofill {
+	box-shadow: 0 0 0px 1000px var(--gray-200) inset !important;
+	-moz-text-fill-color: var(--gray-t-900) !important;
+}
+
+.dark input:-moz-autofill {
+	box-shadow: 0 0 0px 1000px var(--gray-t-600) inset !important;
+	-moz-text-fill-color: var(--gray-t-50) !important;
+}
+
+/* Общие стили */
+input:-internal-autofill-selected {
+	background-color: var(--gray-200) !important;
+	color: var(--gray-t-900) !important;
+}
+
+.dark input:-internal-autofill-selected {
+	background-color: var(--gray-t-600) !important;
+	color: var(--gray-t-50) !important;
 }
 
 /* html {

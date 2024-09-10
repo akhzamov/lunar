@@ -12,8 +12,8 @@ useSetI18nParams()
 
 <template>
   <Html :lang="htmlAttrs.lang" :dir="htmlAttrs.dir">
+  <NuxtLayout />
 
-    <h1 class="text-72-semi text-c-success-500">Hello</h1>
   </Html>
 </template>
 
