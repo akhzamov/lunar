@@ -1,1 +1,1 @@
-export interface IAuthStore { }
+export interface IAuthStore {}

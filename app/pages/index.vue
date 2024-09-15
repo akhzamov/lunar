@@ -1,14 +1,21 @@
 <script lang="ts" setup>
-definePageMeta({
-  middleware: 'auth'
-})
-useSeoMeta({
-  title: 'Home | Lunar'
-})
+	import type { Breadcrumb } from "~/types/breadcrumb.typ";
+
+	definePageMeta({
+		middleware: "auth",
+	});
+	useSeoMeta({
+		title: "Home | Lunar",
+	});
+
+	const breadcrumbs = reactive<Breadcrumb[]>([
+		{ id: 1, name: "Home", path: "/" },
+	]);
 </script>
 
 <template>
-  <div class="text-30-med text-c-error-500">Home</div>
+	<UiBreadcrumbs :breadcrumbs="breadcrumbs" />
+	<div>Home</div>
 </template>
 
 <style scoped></style>

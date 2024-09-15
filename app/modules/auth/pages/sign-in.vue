@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-definePageMeta({
-  layout: 'auth'
-})
-useSeoMeta({
-  title: 'Sign-In | Lunar'
-})
+	definePageMeta({
+		layout: "auth",
+	});
+	useSeoMeta({
+		title: "Sign-In | Lunar",
+	});
 </script>
 
 <template>
-  <SignInAuthForm />
+	<SignInAuthForm />
 </template>
 
 <style scoped></style>
