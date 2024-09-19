@@ -73,7 +73,7 @@
 					<span class="text-16-reg text-c-error-500">*</span>
 				</label>
 				<div
-					class="w-max h-[37px] overflow-hidden flex items-center border border-c-gray-t-400 dark:border-c-gray-t-500 rounded-lg p-0"
+					class="w-max h-[37px] overflow-hidden flex items-center border border-c-gray-t-300 dark:border-c-gray-t-600 rounded-lg p-0"
 				>
 					<UiInputIcon
 						:type="passwordShow ? 'text' : 'password'"
@@ -83,7 +83,7 @@
 					<button
 						@click="passwordShow = !passwordShow"
 						type="button"
-						class="w-[45px] h-[34px] border-l b-bg border-c-gray-t-400 dark:border-c-gray-t-500 flex items-center justify-center"
+						class="w-[45px] h-[34px] border-l b-bg border-c-gray-t-300 dark:border-c-gray-t-600 flex items-center justify-center"
 					>
 						<Icon
 							v-if="!passwordShow"

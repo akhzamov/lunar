@@ -32,17 +32,22 @@
 		<div
 			class="w-full h-full px-6 flex items-center justify-end gap-2"
 		>
-			<UiInput
-				class="w-[320px] h-[40px]"
-				placeholder="Search"
-			/>
+			<div
+				class="flex items-center w-[320px] h-[44px] b-border-300 b-bg px-[14px] rounded-md"
+			>
+				<IconSearchLg class="text-c-gray-t-500" />
+				<UiInputIcon
+					class="flex-grow h-full p-1"
+					placeholder="Поиск"
+				/>
+			</div>
 			<div
 				@click="userMenu = !userMenu"
 				ref="toggleButtonRef"
 				class="w-[40px] h-[40px] flex items-center justify-center rounded-[50%] bg-c-gray-t-200 dark:bg-c-gray-t-600 cursor-pointer"
 			>
 				<IconUser01
-					class="text-c-gray-t-600 dark:text-c-gray-t-200 w-[30px] h-[30px]"
+					class="text-c-gray-t-500 dark:text-c-gray-t-200 w-[30px] h-[30px]"
 				/>
 			</div>
 		</div>

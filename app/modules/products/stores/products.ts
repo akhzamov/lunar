@@ -7,6 +7,11 @@ export const useProductsStore = defineStore("products", {
 	state: (): IProductStore => ({
 		activeFilterTab: 1,
 		productsList: productsList,
+		activeProductsFilter: false,
+		activeTableFilter: false,
+		brandTableShow: true,
+		skuTableShow: true,
+		productTypeTableShow: true,
 	}),
 
 	actions: {},

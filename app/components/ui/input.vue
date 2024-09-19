@@ -19,7 +19,7 @@
 	<input
 		:value="props.modelValue"
 		@input="onInput"
-		class="b-bg border border-c-gray-t-300 dark:border-c-gray-t-600 rounded-lg px-[14px] py-2 outline-none"
+		class="b-bg b-border-300 rounded-lg px-[14px] py-2 outline-none"
 	/>
 </template>
 

@@ -1,89 +1,236 @@
 <script lang="ts" setup>
-	import { productsList } from "~/modules/products/components/Products/products.data";
 	import { useProductsStore } from "~/modules/products/stores/products";
+	import TableFilter from "./TableFilter.vue";
 
 	const productsStore = useProductsStore();
 	const checkAll = ref(false);
-	const products = computed(() => productsStore.filteredProductsList);
+	const oneChecked = ref(false);
+	const checkedLength = ref(0);
 	const productsChecked = reactive<number[]>([]);
+	const deleteButton = ref(false);
+	const allCheckedButton = ref(false);
+	const productsFilterRef = ref<HTMLElement | null>(null);
+	const productsFilterButtonRef = ref<HTMLElement | null>(null);
+	const tableFilterRef = ref<HTMLElement | null>(null);
+	const tableFilterButtonRef = ref<HTMLElement | null>(null);
+	const totalPages = ref(50);
+	const currentPage = ref(1);
+	const perPageList = reactive([
+		{ id: 1, name: "10" },
+		{ id: 2, name: "15" },
+		{ id: 3, name: "20" },
+	]);
+	const perPage = ref(1);
+
+	const handleClickOutsideProductsFilter = (event: MouseEvent) => {
+		if (
+			productsStore.activeProductsFilter &&
+			productsFilterButtonRef.value &&
+			!productsFilterButtonRef.value.contains(event.target as Node) &&
+			productsFilterRef.value &&
+			!productsFilterRef.value.contains(event.target as Node)
+		) {
+			productsStore.activeProductsFilter = false;
+		}
+	};
+	const handleClickOutsideTableFilter = (event: MouseEvent) => {
+		if (
+			productsStore.activeTableFilter &&
+			tableFilterButtonRef.value &&
+			!tableFilterButtonRef.value.contains(event.target as Node) &&
+			tableFilterRef.value &&
+			!tableFilterRef.value.contains(event.target as Node)
+		) {
+			productsStore.activeTableFilter = false;
+		}
+	};
+
+	const handleDeselect = () => {
+		checkAll.value = false;
+		deleteButton.value = false;
+		productsStore.filteredProductsList.forEach((product) => {
+			product.checked = false;
+		});
+	};
+
+	const handleAllSelect = () => {
+		checkAll.value = true;
+		productsStore.filteredProductsList.forEach((product) => {
+			product.checked = true;
+		});
+	};
+
+	const handleCheckAllClicked = () => {
+		checkAll.value = !checkAll.value;
+		if (checkAll.value) {
+			handleDeselect();
+		} else {
+			handleAllSelect();
+		}
+	};
+
+	const activeProductsFilter = () => {
+		productsStore.activeProductsFilter =
+			!productsStore.activeProductsFilter;
+	};
+
+	const activeTableFilter = () => {
+		productsStore.activeTableFilter =
+			!productsStore.activeTableFilter;
+	};
 
 	watchEffect(() => {
 		productsChecked.splice(0, productsChecked.length);
-
-		products.value.forEach((product) => {
+		oneChecked.value = false;
+		checkedLength.value = 0;
+		productsStore.filteredProductsList.forEach((product) => {
 			if (product.checked) {
+				oneChecked.value = true;
+				checkedLength.value += 1;
 				productsChecked.push(product.id);
 			}
 		});
 	});
 
-	watch(
-		checkAll,
-		() => {
-			if (checkAll.value) {
-				productsChecked.splice(0, productsChecked.length);
-				productsStore.productsList.forEach((item) => {
-					item.checked = true;
-					if (item.checked) {
-						productsChecked.push(item.id);
-					}
-				});
-			} else {
-				productsChecked.splice(0, productsChecked.length);
-				productsStore.productsList.forEach((item) => {
-					item.checked = false;
-				});
-			}
-		},
-		{ immediate: true }
-	);
+	watch(checkedLength, () => {
+		if (checkedLength.value != productsStore.productsList.length) {
+			allCheckedButton.value = false;
+			checkAll.value = false;
+			console.log("w");
+		} else {
+			allCheckedButton.value = true;
+			checkAll.value = true;
+			console.log("f");
+		}
+	});
+
+	onMounted(() => {
+		document.addEventListener(
+			"click",
+			handleClickOutsideProductsFilter
+		);
+		document.addEventListener("click", handleClickOutsideTableFilter);
+	});
+
+	onBeforeUnmount(() => {
+		document.removeEventListener(
+			"click",
+			handleClickOutsideProductsFilter
+		);
+		document.removeEventListener(
+			"click",
+			handleClickOutsideTableFilter
+		);
+	});
 </script>
 
 <template>
-	<div class="h-max b-bg rounded-xl mt-6">
+	<div class="h-max b-bg rounded-xl mt-6 select-none">
 		<div
-			class="flex items-center justify-between rounded-tl-xl rounded-tr-xl b-border px-6 py-1"
+			class="flex items-center justify-between rounded-tl-xl rounded-tr-xl border-[1px] border-c px-6 py-1"
 		>
-			<div>
+			<div class="relative w-max">
 				<UiButton
-					class="flex items-center justify-center gap-2 p-2 b-border b-bg"
+					class="w-max"
 					v-if="checkAll || productsChecked.length > 0"
+					@click="deleteButton = !deleteButton"
+					text="Массовое действие"
+					hover-bg-color="bg-c-gray-t-100 dark:bg-c-gray-t-700"
+					p="p-[10px]"
 				>
 					<template v-slot:icon>
-						<IconDotsVertical
-							class="text-c-gray-t-300 dark:text-c-gray-t-500"
-						/>
+						<IconDotsVertical class="text-c-gray-t-300" />
 					</template>
-					<template v-slot:text>
-						<span class="text-16-semi">Массовое Действие</span>
+				</UiButton>
+				<UiButton
+					class="w-max absolute top-[100%] left-0 translate-y-[4px]"
+					v-if="productsChecked.length > 0 && deleteButton"
+					@click="deleteButton = false"
+					text="Удалить отмеченные"
+					text-color="text-c-error-600"
+					hover-bg-color="bg-c-error-500-30"
+					p="p-4"
+				>
+					<template v-slot:icon-r>
+						<IconTrash01 class="text-c-error-600" />
 					</template>
 				</UiButton>
 			</div>
 			<dir class="flex items-center gap-3">
 				<div
-					class="flex items-center w-[320px] h-[44px] b-border b-bg px-[14px] rounded-md"
+					class="flex items-center w-[320px] h-[44px] b-border-300 b-bg px-[14px] rounded-md"
 				>
 					<IconSearchLg
-						class="text-c-gray-t-300 dark:text-c-gray-t-500"
+						class="text-c-gray-t-500 dark:text-c-gray-t-500"
 					/>
 					<UiInputIcon
 						class="flex-grow h-full p-1"
 						placeholder="Поиск"
 					/>
 				</div>
-				<div
-					class="w-[40px] h-[40px] b-border b-bg rounded-md flex items-center justify-center cursor-pointer text-c-gray-t-300 dark:text-c-gray-t-500 hover:text-c-gray-t-50 dark:hover:text-c-gray-t-400"
-				>
-					<IconFilterFunnel02 />
+				<div class="relative">
+					<div
+						@click="activeProductsFilter"
+						ref="productsFilterButtonRef"
+						class="w-[44px] h-[44px] flex items-center justify-center border-[1px] rounded-md border-c-gray-t-300 dark:border-c-gray-t-500 hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
+					>
+						<IconFilterFunnel02
+							class="text-c-gray-t-700 dark:text-c-gray-t-500"
+						/>
+					</div>
+					<div
+						v-if="productsStore.activeProductsFilter"
+						ref="productsFilterRef"
+						class="absolute top-[100%] right-0 translate-y-[10px]"
+					>
+						<ProductsFilter ref="productsFilterRef" />
+					</div>
 				</div>
-				<div
-					class="w-[40px] h-[40px] b-border b-bg rounded-md flex items-center justify-center cursor-pointer text-c-gray-t-300 dark:text-c-gray-t-500 hover:text-c-gray-t-50 dark:hover:text-c-gray-t-400"
-				>
-					<IconColumns03 />
+				<div class="relative">
+					<div
+						@click="activeTableFilter"
+						ref="tableFilterButtonRef"
+						class="w-[44px] h-[44px] flex items-center justify-center border-[1px] rounded-md border-c-gray-t-300 dark:border-c-gray-t-500 hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
+					>
+						<IconColumns03
+							class="text-c-gray-t-700 dark:text-c-gray-t-500"
+						/>
+					</div>
+					<div
+						v-if="productsStore.activeTableFilter"
+						ref="tableFilterRef"
+						class="absolute top-[100%] right-0 translate-y-[10px]"
+					>
+						<TableFilter />
+					</div>
 				</div>
 			</dir>
 		</div>
-		<div class="flex flex-col b-border rounded-br-xl rounded-bl-xl">
+		<div
+			class="flex items-center justify-between border-x-[1px] border-b-[1px] border-c px-6 py-3"
+			v-if="oneChecked"
+		>
+			<p class="text-14-semi text-c-primary-700">
+				<span class="text-16-bold">{{ checkedLength }}</span> записей
+				выделено
+			</p>
+			<div class="flex items-center justify-center gap-6">
+				<p
+					class="text-16-semi text-c-primary-700 cursor-pointer"
+					v-if="!checkAll && !allCheckedButton"
+					@click="handleAllSelect()"
+				>
+					Выделить все
+				</p>
+				<p
+					class="text-16-semi text-c-error-700 cursor-pointer"
+					@click="handleDeselect()"
+				>
+					Снять все выделение
+				</p>
+			</div>
+		</div>
+		<div class="flex flex-col border-x-[1px] border-b-[1px] border-c">
 			<div class="-m-1.5">
 				<div class="p-1.5 min-w-full inline-block align-middle">
 					<div class="">
@@ -97,7 +244,10 @@
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
 										<div class="flex items-center gap-3">
-											<UiCheckbox v-model="checkAll" />
+											<UiCheckbox
+												v-model="checkAll"
+												@click="handleCheckAllClicked"
+											/>
 											Статус
 										</div>
 									</th>
@@ -112,12 +262,14 @@
 										Название
 									</th>
 									<th
+										v-if="productsStore.brandTableShow"
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
 										Бренд
 									</th>
 									<th
+										v-if="productsStore.skuTableShow"
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
@@ -130,10 +282,11 @@
 										На складе
 									</th>
 									<th
+										v-if="productsStore.productTypeTableShow"
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
-										Тип
+										Тип продукта
 									</th>
 									<th
 										scope="col"
@@ -145,7 +298,7 @@
 								class="divide-y divide-gray-200 dark:divide-neutral-700"
 							>
 								<tr
-									v-for="product in products"
+									v-for="product in productsStore.filteredProductsList"
 									:key="product.id"
 									class="hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
 									:class="{
@@ -165,13 +318,13 @@
 											<UiCheckbox v-model="product.checked" />
 											<span
 												v-if="product.status == 'published'"
-												class="px-2 py-[2px] bg-c-success-25 dark:bg-c-success-100 border-2 border-c-success-300 rounded-md text-c-success-500"
+												class="px-2 py-[2px] bg-c-success-25 dark:bg-c-success-500-8 border-[1px] border-c-success-100 rounded-md text-c-success-500"
 											>
 												Опубликован
 											</span>
 											<span
 												v-if="product.status == 'draft'"
-												class="px-2 py-[2px] bg-c-warning-25 dark:bg-c-warning-100 border-2 border-c-warning-300 rounded-md text-c-warning-500"
+												class="px-2 py-[2px] bg-c-warning-25 dark:bg-c-warning-500-8 border-[1px] border-c-warning-100 rounded-md text-c-warning-500"
 											>
 												Черновик
 											</span>
@@ -186,10 +339,14 @@
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
 										<span>{{ product.name }}</span>
 									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
+									<td
+										class="px-6 py-4 whitespace-nowrap text-sm"
+										v-if="productsStore.brandTableShow"
+									>
 										{{ product.brand }}
 									</td>
 									<td
+										v-if="productsStore.skuTableShow"
 										class="relative px-6 py-4 whitespace-nowrap text-sm"
 									>
 										<span
@@ -220,7 +377,10 @@
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
 										<span>{{ product.warehouse }}</span>
 									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
+									<td
+										class="px-6 py-4 whitespace-nowrap text-sm"
+										v-if="productsStore.productTypeTableShow"
+									>
 										<span>
 											{{
 												product.type == "new"
@@ -247,6 +407,29 @@
 				</div>
 			</div>
 		</div>
+		<div
+			class="flex items-center justify-between rounded-bl-xl rounded-br-xl border-x-[1px] border-b-[1px] border-c px-6 py-3"
+		>
+			<p class="text-14-semi">
+				Показано от <span>1</span> до <span>12</span> из
+				<span>124</span> результатов
+			</p>
+			<div class="h-full flex items-center justify-end">
+				<UiSelect
+					:data="perPageList"
+					defaultSelectText=""
+					label=""
+					:showMenu="true"
+					:showPositionTop="true"
+					v-model="perPage"
+				/>
+			</div>
+			<UiPagination
+				:totalPages="totalPages"
+				:currentPage="currentPage"
+				v-model="currentPage"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -257,5 +440,8 @@
 		padding: 8px 12px !important;
 		text-wrap: wrap !important;
 		box-shadow: 0px 12px 16px -2px #1018283f !important;
+	}
+	.border-c {
+		@apply border-c-gray-t-200 dark:border-c-gray-t-600;
 	}
 </style>

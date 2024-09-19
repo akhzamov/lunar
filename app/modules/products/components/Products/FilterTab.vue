@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-	import { ref, watch } from "vue";
-	import { useProductsStore } from "../../stores/products";
+	import { useProductsStore } from "~/modules/products/stores/products";
 
 	const productsStore = useProductsStore();
 </script>
@@ -40,7 +39,7 @@
 			Черновик
 
 			<span
-				class="text-12-med px-2 py-[2px] bg-c-gray-t-1000 dark:bg-c-gray-t-500 rounded-2xl"
+				class="text-12-med px-2 py-[2px] bg-c-gray-t-100 dark:bg-c-gray-t-500 rounded-2xl"
 			>
 				12
 			</span>

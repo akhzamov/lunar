@@ -33,10 +33,11 @@
 		/>
 		<div class="inline-flex items-center z-10">
 			<div
-				class="w-5 h-5 b-bg rounded-md flex items-center justify-center transition-colors duration-200"
+				class="w-5 h-5 rounded-md flex items-center justify-center transition-colors duration-200"
 				:class="{
-					'border border-c-primary-600': isChecked,
-					'b-border': !isChecked,
+					'border border-c-primary-600 bg-c-primary-50 dark:bg-c-primary-500-8':
+						isChecked,
+					'b-border b-bg': !isChecked,
 				}"
 			>
 				<IconCheck
