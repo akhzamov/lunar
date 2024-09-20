@@ -1,7 +1,14 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+	import { useProductsStore } from "~/modules/products/stores/products";
+
+	const productsStore = useProductsStore();
+</script>
 
 <template>
-	<div class="flex">
+	<div class="flex relative">
+		<Transition name="modal">
+			<ModalWindowsAddProduct v-if="productsStore.productsModal" />
+		</Transition>
 		<AsideSidebar />
 		<div class="w-full">
 			<HeaderNav />

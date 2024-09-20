@@ -33,6 +33,7 @@ export default {
 				"c-gray-t-200": "var(--gray-t-200)",
 				"c-gray-t-300": "var(--gray-t-300)",
 				"c-gray-t-400": "var(--gray-t-400)",
+				"c-gray-t-450-60": "var(--gray-t-450-60)",
 				"c-gray-t-500": "var(--gray-t-500)",
 				"c-gray-t-600": "var(--gray-t-600)",
 				"c-gray-t-700": "var(--gray-t-700)",

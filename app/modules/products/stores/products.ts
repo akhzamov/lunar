@@ -12,6 +12,7 @@ export const useProductsStore = defineStore("products", {
 		brandTableShow: true,
 		skuTableShow: true,
 		productTypeTableShow: true,
+		productsModal: false,
 	}),
 
 	actions: {},

@@ -69,20 +69,26 @@
 	<div class="flex flex-col">
 		<label v-if="label.length > 0">{{ label }}</label>
 		<div
-			class="relative inline-block"
+			class="relative inline-block h-[44px]"
 			:class="[{ 'mt-3': label.length > 0 }]"
 		>
-			<div>
+			<div class="h-full">
 				<button
+					@click="openSelectMenu = !openSelectMenu"
 					type="button"
-					class="w-full b-bg b-border-300 flex items-center justify-between gap-2 rounded-lg px-[14px] py-2 outline-none"
 					id="menu-button"
 					aria-expanded="true"
 					aria-haspopup="true"
-					@click="openSelectMenu = !openSelectMenu"
+					class="w-full h-full b-bg flex items-center justify-between gap-2 rounded-lg px-[14px] py-2 outline-none"
+					:class="[
+						{ 'b-border': !openSelectMenu },
+						{ 'border-[1px] border-c-primary-500': openSelectMenu },
+					]"
 				>
 					<span>{{ selectedItem }}</span>
-					<IconChevronDown />
+					<IconChevronDown
+						:class="[{ 'rotate-[180deg]': openSelectMenu }]"
+					/>
 				</button>
 			</div>
 			<div
@@ -90,7 +96,7 @@
 				:class="[
 					{ 'bottom-[100%] translate-y-[-5px]': showPositionTop },
 				]"
-				class="absolute right-0 z-5 mt-2 w-full b-bg b-border-300 flex items-center justify-between rounded-lg p-1"
+				class="absolute right-0 z-5 mt-2 w-full b-bg border-[1px] border-c-primary-500 flex items-center justify-between rounded-lg p-1"
 				role="menu"
 			>
 				<div class="w-full flex flex-col items-start justify-center">

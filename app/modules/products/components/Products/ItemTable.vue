@@ -157,26 +157,18 @@
 				</UiButton>
 			</div>
 			<dir class="flex items-center gap-3">
-				<div
-					class="flex items-center w-[320px] h-[44px] b-border-300 b-bg px-[14px] rounded-md"
-				>
-					<IconSearchLg
-						class="text-c-gray-t-500 dark:text-c-gray-t-500"
-					/>
-					<UiInputIcon
-						class="flex-grow h-full p-1"
-						placeholder="Поиск"
-					/>
-				</div>
+				<UiInputIcon class="w-[320px]">
+					<template v-slot:icon-l>
+						<IconSearchLg />
+					</template>
+				</UiInputIcon>
 				<div class="relative">
 					<div
 						@click="activeProductsFilter"
 						ref="productsFilterButtonRef"
-						class="w-[44px] h-[44px] flex items-center justify-center border-[1px] rounded-md border-c-gray-t-300 dark:border-c-gray-t-500 hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
+						class="productFilterButton"
 					>
-						<IconFilterFunnel02
-							class="text-c-gray-t-700 dark:text-c-gray-t-500"
-						/>
+						<IconFilterFunnel02 />
 					</div>
 					<div
 						v-if="productsStore.activeProductsFilter"
@@ -190,11 +182,9 @@
 					<div
 						@click="activeTableFilter"
 						ref="tableFilterButtonRef"
-						class="w-[44px] h-[44px] flex items-center justify-center border-[1px] rounded-md border-c-gray-t-300 dark:border-c-gray-t-500 hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
+						class="productFilterButton"
 					>
-						<IconColumns03
-							class="text-c-gray-t-700 dark:text-c-gray-t-500"
-						/>
+						<IconColumns03 />
 					</div>
 					<div
 						v-if="productsStore.activeTableFilter"
@@ -443,5 +433,11 @@
 	}
 	.border-c {
 		@apply border-c-gray-t-200 dark:border-c-gray-t-600;
+	}
+	.productFilterButton {
+		@apply w-[44px] h-[44px] flex items-center justify-center border-[1px] rounded-md;
+		@apply hover:bg-c-primary-500-8 dark:hover:bg-c-primary-500-8;
+		@apply border-c-gray-t-300 dark:border-c-gray-t-500 hover:border-c-primary-500 dark:hover:border-c-primary-500;
+		@apply text-c-gray-t-700 dark:text-c-gray-t-500 hover:text-c-primary-500 dark:hover:text-c-primary-500;
 	}
 </style>

@@ -8,4 +8,5 @@ export interface IProductStore {
 	brandTableShow: boolean;
 	skuTableShow: boolean;
 	productTypeTableShow: boolean;
+	productsModal: boolean;
 }

@@ -7,7 +7,12 @@
 			type: String,
 			default: "",
 		},
+		type: {
+			type: String,
+			default: "text",
+		},
 	});
+	const inputActive = ref(false);
 	const emit = defineEmits(["update:modelValue"]);
 	const onInput = (event: Event) => {
 		const target = event.target as HTMLInputElement;
@@ -19,7 +24,14 @@
 	<input
 		:value="props.modelValue"
 		@input="onInput"
-		class="b-bg b-border-300 rounded-lg px-[14px] py-2 outline-none"
+		:type="props.type"
+		class="b-bg h-[44px] rounded-lg px-[8px] outline-none"
+		:class="[
+			{ 'border-[1px] border-c-primary-500': inputActive },
+			{ 'b-border-300': !inputActive },
+		]"
+		@focusin="inputActive = true"
+		@focusout="inputActive = false"
 	/>
 </template>
 

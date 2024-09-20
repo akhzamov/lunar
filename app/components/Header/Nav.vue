@@ -39,15 +39,14 @@
 		<div
 			class="w-full h-full px-6 flex items-center justify-end gap-2"
 		>
-			<div
-				class="flex items-center w-[320px] h-[44px] b-border-300 b-bg px-[14px] rounded-md"
+			<UiInputIcon
+				class="w-[320px]"
+				iconPosition="left"
 			>
-				<IconSearchLg class="text-c-gray-t-500" />
-				<UiInputIcon
-					class="flex-grow h-full p-1"
-					placeholder="Поиск"
-				/>
-			</div>
+				<template v-slot:icon-l>
+					<IconSearchLg />
+				</template>
+			</UiInputIcon>
 			<div
 				@click="userMenu = !userMenu"
 				ref="toggleButtonRef"
@@ -119,7 +118,7 @@
 						/>
 					</div>
 				</div>
-				<div class="w-full h-[34px] flex items-center mt-4">
+				<div class="w-full h-[34px] flex items-center mt-6">
 					<UiButton
 						class="w-full"
 						text="Выйти"
