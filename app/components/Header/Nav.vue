@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+	const router = useRouter();
 	const colorMode = useColorMode();
 	const userMenu = ref(false);
+	const authCookie = useCookie("auth");
 	const userMenuRef = ref<HTMLElement | null>(null);
 	const toggleButtonRef = ref<HTMLElement | null>(null);
 
@@ -14,6 +16,11 @@
 		) {
 			userMenu.value = false;
 		}
+	};
+
+	const logOut = () => {
+		router.push("/sign-in");
+		authCookie.value = null;
 	};
 
 	onMounted(() => {
@@ -55,7 +62,7 @@
 			<div
 				v-if="userMenu"
 				ref="userMenuRef"
-				class="w-[224px] h-max b-bg b-border p-2 rounded-lg absolute top-[110%] right-[24px]"
+				class="w-[224px] h-max b-bg b-border px-2 py-4 rounded-lg absolute top-[110%] right-[24px]"
 			>
 				<div class="w-full h-[34px] flex items-center gap-2">
 					<div
@@ -111,6 +118,15 @@
 							class="w-[24px] h-[24px] dark:text-white text-c-gray-t-400"
 						/>
 					</div>
+				</div>
+				<div class="w-full h-[34px] flex items-center mt-4">
+					<UiButton
+						class="w-full"
+						text="Выйти"
+						hover-bg-color="bg-c-gray-t-100 dark:bg-c-gray-t-700"
+						p="p-[10px]"
+						@click="logOut"
+					></UiButton>
 				</div>
 			</div>
 		</Transition>

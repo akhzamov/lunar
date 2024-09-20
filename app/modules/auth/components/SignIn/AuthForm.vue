@@ -38,7 +38,7 @@
 	<div class="w-full h-[100vh] flex items-center justify-center">
 		<form
 			@submit.prevent="onSubmit"
-			class="b-bg border border-c-gray-t-400 dark:border-transparent p-12 rounded-lg flex flex-col items-center justify-start"
+			class="b-bg b-border p-12 rounded-lg flex flex-col items-center justify-start"
 		>
 			<img
 				src="/img/lunar-logo-dark.svg"
@@ -50,10 +50,10 @@
 				alt=""
 				class="w-[109px] mb-4 block dark:hidden"
 			/>
-			<h3 class="text-24-bold">Sign in</h3>
+			<h3 class="text-24-bold">Авторизация</h3>
 			<div class="flex flex-col gap-2 mt-6">
 				<label class="flex items-start gap-[2px]">
-					<span class="text-14-med">Email Address</span>
+					<span class="text-14-med">Email почта</span>
 					<span class="text-16-reg text-c-error-500">*</span>
 				</label>
 				<UiInput
@@ -69,7 +69,7 @@
 			</div>
 			<div class="flex flex-col gap-2 mt-6">
 				<label class="flex items-start gap-[2px]">
-					<span class="text-14-med">Password</span>
+					<span class="text-14-med">Пароль</span>
 					<span class="text-16-reg text-c-error-500">*</span>
 				</label>
 				<div
@@ -105,11 +105,15 @@
 			</div>
 			<UiButton
 				type="submit"
-				class="w-full h-[37px] mt-6 bg-c-primary-600 hover:bg-c-primary-500 transition duration-100"
+				class="w-full mt-6"
+				text="Войти"
+				text-color="text-c-gray-t-50"
+				bg-color="bg-c-primary-600"
+				:border-hide="true"
+				hover-bg-color="bg-c-primary-700"
+				px="px-4"
+				py="py-[10px]"
 			>
-				<template v-slot:text>
-					<span class="text-16-semi text-c-gray-t-50">Sig in</span>
-				</template>
 			</UiButton>
 		</form>
 	</div>
