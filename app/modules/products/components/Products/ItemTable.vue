@@ -388,7 +388,7 @@
 									>
 										<button
 											type="button"
-											class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500"
+											class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
 										>
 											<IconEdit05 />
 											Изменить

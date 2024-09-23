@@ -46,7 +46,9 @@
 	<div class="w-[320px] h-max b-border b-bg rounded-lg p-4">
 		<div class="flex items-center justify-between">
 			<p class="text-16-semi">Фильтры</p>
-			<p class="text-14-reg text-c-error-400 cursor-pointer">
+			<p
+				class="text-14-semi text-c-error-400 cursor-pointer hover:underline"
+			>
 				<span>Очистить</span>
 			</p>
 		</div>

@@ -39,7 +39,7 @@
 			Черновик
 
 			<span
-				class="text-12-med px-2 py-[2px] bg-c-gray-t-100 dark:bg-c-gray-t-500 rounded-2xl"
+				class="text-12-med text-c-primary-400 px-2 py-[2px] bg-c-primary-500-8 rounded-md border border-c-primary-500"
 			>
 				12
 			</span>
