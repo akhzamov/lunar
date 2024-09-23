@@ -33,6 +33,7 @@
 			productsStore.activeProductsFilter = false;
 		}
 	};
+
 	const handleClickOutsideTableFilter = (event: MouseEvent) => {
 		if (
 			productsStore.activeTableFilter &&

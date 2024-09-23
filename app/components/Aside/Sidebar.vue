@@ -9,6 +9,7 @@
 	const sidebarRef = ref<HTMLElement | null>(null);
 	const mainStore = useMainStore();
 	const route = useRoute();
+	const sidebarWidthClass = ref("w-[280px]");
 	const menuItems = reactive([
 		{
 			id: 1,
@@ -85,6 +86,8 @@
 			activeDashboardLinkMenu.value = true;
 		}
 	};
+	const handleShowFullSidebar = () => {};
+
 	onMounted(() => {
 		menuItems.forEach((item) => {
 			item.child.forEach((child) => {
@@ -94,7 +97,6 @@
 			});
 		});
 	});
-
 	watch(
 		[asideFullWidth, menuItems, activeMenuChild],
 		() => {
@@ -102,12 +104,15 @@
 				menuItems.forEach((item) => {
 					item.isActive = false;
 				});
+				sidebarWidthClass.value = "w-[65px]";
 			}
 			if (!asideFullWidth.value) {
 				activeMenuChild.value = true;
+				sidebarWidthClass.value = "w-[65px]";
 			} else {
 				activeMenuChild.value = false;
 				activeDashboardLinkMenu.value = false;
+				sidebarWidthClass.value = "w-[280px]";
 			}
 		},
 		{ immediate: true }
@@ -116,32 +121,33 @@
 
 <template>
 	<div
-		class="sticky top-0 left-0 z-30 h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600 transition-all duration-200"
-		:class="{
-			'w-[280px]': mainStore.asideFullWidth,
-			'w-[60px]': !mainStore.asideFullWidth,
-		}"
+		class="sticky top-0 left-0 z-30 h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600 transition-all duration-300"
 		ref="sidebarRef"
 		@mouseleave="handleMouseleaveInSidebar()"
 	>
-		<div class="w-full flex flex-col items-center justify-start">
-			<div class="mt-4">
+		<div
+			class="w-full h-max flex flex-col items-center justify-start"
+		>
+			<div class="mt-4 flex w-max h-max">
 				<img
 					src="/img/lunar-logo-dark.svg"
-					alt=""
-					class="w-[120px] hidden dark:block"
-					v-if="mainStore.asideFullWidth"
+					class="w-[120px]"
+					:class="[
+						{ 'hidden dark:block': mainStore.asideFullWidth },
+						{ hidden: !mainStore.asideFullWidth },
+					]"
 				/>
 				<img
 					src="/img/lunar-logo.svg"
-					alt=""
-					class="w-[120px] block dark:hidden"
-					v-if="mainStore.asideFullWidth"
+					class="w-[120px]"
+					:class="[
+						{ 'block dark:hidden': mainStore.asideFullWidth },
+						{ hidden: !mainStore.asideFullWidth },
+					]"
 				/>
 				<img
 					src="/lunar-icon.png"
-					alt=""
-					v-if="!mainStore.asideFullWidth"
+					:class="[{ hidden: mainStore.asideFullWidth }]"
 				/>
 			</div>
 			<div
@@ -153,7 +159,7 @@
 			>
 				<Icon
 					name="heroicons:chevron-left"
-					class="transition-all duration-200"
+					class="transition-all duration-300"
 					:class="{ 'rotate-[180deg]': !mainStore.asideFullWidth }"
 				/>
 			</div>
@@ -170,13 +176,15 @@
 					>
 						<nuxtLink
 							to="/dashboard"
-							class="w-full h-[40px] flex items-center justify-start"
+							class="h-[40px] flex items-center justify-start gap-3"
 							@mouseenter="handleMouseenterOnDashboardLink()"
 						>
-							<IconBarChartSquare02 class="link-active-icon" />
+							<IconBarChartSquare02
+								class="link-active-icon w-[25px]"
+							/>
 							<span
-								v-if="mainStore.asideFullWidth"
-								class="link-active-text ml-3 text-16-med"
+								class="link-active-text text-16-med"
+								:class="[{ hidden: !mainStore.asideFullWidth }]"
 							>
 								Дашборд
 							</span>
@@ -219,34 +227,36 @@
 						}"
 					></div>
 					<div
-						class="relative link-active-block flex-grow h-full flex flex-col items-start ml-2 mr-2 px-2 rounded-md"
+						class="relative link-active-block flex-grow h-full flex flex-col items-start ml-2 mr-2 px-2 rounded-md overflow-hidden"
 					>
 						<div
-							class="w-full h-[40px] flex items-center justify-between"
+							class="h-[40px] flex items-center justify-between gap-10"
 							@mouseenter="handleMouseenterOnItem(item.id)"
 						>
-							<div class="flex items-center justify-start">
+							<div class="flex items-center justify-start gap-3">
 								<component
 									:is="item.icon"
-									class="link-active-icon"
+									class="link-active-icon w-[25px]"
 									:class="{ 'text-c-primary-500': item.isActive }"
 								/>
 								<span
-									v-if="mainStore.asideFullWidth"
-									class="link-active-text ml-3 text-16-med"
-									:class="{ 'text-c-primary-500': item.isActive }"
+									class="link-active-text text-16-med min-w-[100px] w-max"
+									:class="[
+										{ hidden: !mainStore.asideFullWidth },
+										{ 'text-c-primary-500': item.isActive },
+									]"
 								>
 									{{ item.title }}
 								</span>
 							</div>
-							<div>
+							<div :class="[{ hidden: !mainStore.asideFullWidth }]">
 								<IconChevronUp
-									v-if="mainStore.asideFullWidth"
-									class="ml-4"
-									:class="{
-										'text-c-primary-500 rotate-[180deg]':
-											item.isActive,
-									}"
+									:class="[
+										{
+											'text-c-primary-500 rotate-[180deg]':
+												item.isActive,
+										},
+									]"
 								/>
 							</div>
 						</div>
