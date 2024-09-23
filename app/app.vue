@@ -11,10 +11,7 @@
 </script>
 
 <template>
-	<Html
-		:lang="htmlAttrs.lang"
-		:dir="htmlAttrs.dir"
-	>
+	<Html :lang="htmlAttrs.lang">
 		<NuxtLayout />
 	</Html>
 </template>

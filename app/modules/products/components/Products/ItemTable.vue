@@ -128,7 +128,7 @@
 <template>
 	<div class="h-max b-bg rounded-xl mt-6 select-none">
 		<div
-			class="flex items-center justify-between rounded-tl-xl rounded-tr-xl border-[1px] border-c px-6 py-1"
+			class="flex items-center justify-between rounded-tl-xl rounded-tr-xl border-[1px] border-c px-6 py-3"
 		>
 			<div class="relative w-max">
 				<UiButton
@@ -157,8 +157,11 @@
 					</template>
 				</UiButton>
 			</div>
-			<dir class="flex items-center gap-3">
-				<UiInputIcon class="w-[320px]">
+			<div class="flex items-center gap-3">
+				<UiInputIcon
+					class="w-[320px]"
+					iconPosition="left"
+				>
 					<template v-slot:icon-l>
 						<IconSearchLg />
 					</template>
@@ -195,7 +198,7 @@
 						<TableFilter />
 					</div>
 				</div>
-			</dir>
+			</div>
 		</div>
 		<div
 			class="flex items-center justify-between border-x-[1px] border-b-[1px] border-c px-6 py-3"

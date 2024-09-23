@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 	app: {
 		head: {
 			link: [
-				{ rel: "icon", type: "image/png", href: "/lunar-icon.png" },
+				{ rel: "icon", type: "image/svg+xml", href: "/logo.svg" },
 			],
 			bodyAttrs: {
 				id: "body",

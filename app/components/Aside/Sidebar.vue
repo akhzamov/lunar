@@ -6,8 +6,8 @@
 	import IconTag03 from "~/components/icon/Tag03.vue";
 	import { useMainStore } from "~/stores/main";
 
-	const sidebarRef = ref<HTMLElement | null>(null);
 	const mainStore = useMainStore();
+	const colorMode = useColorMode();
 	const route = useRoute();
 	const sidebarWidthClass = ref("w-[280px]");
 	const menuItems = reactive([
@@ -121,33 +121,18 @@
 
 <template>
 	<div
-		class="sticky top-0 left-0 z-30 h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600 transition-all duration-300"
-		ref="sidebarRef"
+		class="sticky top-0 left-0 z-30 h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600"
 		@mouseleave="handleMouseleaveInSidebar()"
 	>
 		<div
-			class="w-full h-max flex flex-col items-center justify-start"
+			class="w-max h-max flex flex-col items-start justify-start transition duration-300"
 		>
-			<div class="mt-4 flex w-max h-max">
+			<div
+				class="mt-5 ml-4 w-8 h-8 b-border-300 bg-c-gray-t-50 dark:bg-c-gray-t-700 rounded-md flex items-center justify-center"
+			>
 				<img
-					src="/img/lunar-logo-dark.svg"
-					class="w-[120px]"
-					:class="[
-						{ 'hidden dark:block': mainStore.asideFullWidth },
-						{ hidden: !mainStore.asideFullWidth },
-					]"
-				/>
-				<img
-					src="/img/lunar-logo.svg"
-					class="w-[120px]"
-					:class="[
-						{ 'block dark:hidden': mainStore.asideFullWidth },
-						{ hidden: !mainStore.asideFullWidth },
-					]"
-				/>
-				<img
-					src="/lunar-icon.png"
-					:class="[{ hidden: mainStore.asideFullWidth }]"
+					src="/logo.svg"
+					class="w-6 h-6"
 				/>
 			</div>
 			<div
@@ -163,14 +148,19 @@
 					:class="{ 'rotate-[180deg]': !mainStore.asideFullWidth }"
 				/>
 			</div>
-			<component is="UiInput" />
 			<ul
 				class="w-full flex flex-col items-center justify-start gap-1 mt-10"
 			>
 				<li
 					class="w-full flex items-start justify-start cursor-pointer"
 				>
-					<div class="w-1 h-[40px] rounded-tr-lg rounded-br-lg"></div>
+					<div
+						class="w-1 h-[40px] rounded-tr-lg rounded-br-lg"
+						:class="{
+							'bg-c-primary-500': activeDashboardLinkMenu,
+							'bg-transparent': !activeDashboardLinkMenu,
+						}"
+					></div>
 					<div
 						class="relative link-active-block flex-grow h-full flex flex-col items-start ml-2 mr-2 px-2 rounded-md"
 					>
@@ -181,36 +171,48 @@
 						>
 							<IconBarChartSquare02
 								class="link-active-icon w-[25px]"
+								:class="{
+									'text-c-primary-500': activeDashboardLinkMenu,
+								}"
 							/>
-							<span
-								class="link-active-text text-16-med"
-								:class="[{ hidden: !mainStore.asideFullWidth }]"
-							>
-								Дашборд
-							</span>
+							<TransitionGroup name="link-text">
+								<div
+									v-if="mainStore.asideFullWidth"
+									class="flex items-center gap-10"
+								>
+									<span
+										class="link-active-text text-16-med min-w-[100px] w-max"
+									>
+										Дашборд
+									</span>
+									<IconArrowOnSquare class="link-active-text" />
+								</div>
+							</TransitionGroup>
 						</nuxtLink>
-						<div
-							class="flex flex-col items-start justify-center mr-2 px-2 gap transition duration-300"
-							:class="{
-								'h-max overflow-visible opacity-100':
-									activeDashboardLinkMenu,
-								'h-0 overflow-hidden opacity-0':
-									!activeDashboardLinkMenu,
-								'absolute z-40 top-[100] left-[100%] translate-x-[9px] translate-y-[-20%] px-4 py-2':
-									!mainStore.asideFullWidth,
-								'b-bg b-border rounded-lg': !mainStore.asideFullWidth,
-							}"
-						>
-							<nuxtLink
-								to="/dashboard"
-								class="w-full h-[40px] flex items-center justify-center"
+						<Transition name="sidebar-link-menu-hover">
+							<div
+								v-if="
+									activeDashboardLinkMenu && !mainStore.asideFullWidth
+								"
+								@click.stop
+								class="sidebar-link-menu-hover b-bg"
 							>
-								<!-- <IconBarChartSquare02 class="link-active-icon" /> -->
-								<span class="link-active-text text-16-med">
-									Дашборд
-								</span>
-							</nuxtLink>
-						</div>
+								<div
+									class="w-2 h-[40px] rounded-tr-lg rounded-br-lg absolute top-0 left-0 translate-x-[-2px] b-bg"
+								></div>
+								<nuxtLink
+									to="/dashboard"
+									class="w-full h-[40px] flex items-center justify-start mt-2 mb-2"
+								>
+									<IconBarChartSquare02
+										class="link-active-icon w-[25px]"
+									/>
+									<span class="link-active-text ml-3 text-16-med">
+										Дашборд
+									</span>
+								</nuxtLink>
+							</div>
+						</Transition>
 					</div>
 				</li>
 				<li
@@ -227,105 +229,162 @@
 						}"
 					></div>
 					<div
-						class="relative link-active-block flex-grow h-full flex flex-col items-start ml-2 mr-2 px-2 rounded-md overflow-hidden"
+						class="relative link-active-block flex-grow h-full flex flex-col items-start ml-2 mr-2 px-2 rounded-md"
+						@mouseenter="handleMouseenterOnItem(item.id)"
 					>
 						<div
-							class="h-[40px] flex items-center justify-between gap-10"
-							@mouseenter="handleMouseenterOnItem(item.id)"
+							class="h-[40px] flex items-center justify-between gap-3"
 						>
-							<div class="flex items-center justify-start gap-3">
-								<component
-									:is="item.icon"
-									class="link-active-icon w-[25px]"
-									:class="{ 'text-c-primary-500': item.isActive }"
-								/>
-								<span
-									class="link-active-text text-16-med min-w-[100px] w-max"
-									:class="[
-										{ hidden: !mainStore.asideFullWidth },
-										{ 'text-c-primary-500': item.isActive },
-									]"
+							<component
+								:is="item.icon"
+								class="link-active-icon w-[25px]"
+								:class="{ 'text-c-primary-500': item.isActive }"
+							/>
+							<Transition name="link-text">
+								<div
+									v-if="mainStore.asideFullWidth"
+									class="flex items-center gap-10"
 								>
-									{{ item.title }}
-								</span>
-							</div>
-							<div :class="[{ hidden: !mainStore.asideFullWidth }]">
-								<IconChevronUp
-									:class="[
-										{
-											'text-c-primary-500 rotate-[180deg]':
-												item.isActive,
-										},
-									]"
-								/>
-							</div>
+									<span
+										class="link-active-text text-16-med min-w-[100px] w-max"
+										:class="[{ 'text-c-primary-500': item.isActive }]"
+									>
+										{{ item.title }}
+									</span>
+									<IconChevronUp
+										:class="[
+											{
+												'text-c-primary-500 rotate-[180deg]':
+													item.isActive,
+											},
+										]"
+									/>
+								</div>
+							</Transition>
 						</div>
-						<div
-							class="flex flex-col items-start justify-center mr-2 px-2 gap transition duration-300"
-							:class="{
-								'h-max overflow-visible opacity-100 w-full':
-									item.isActive,
-								'h-0 overflow-hidden opacity-0': !item.isActive,
-								'absolute z-40 top-[0] left-[100%] translate-x-[9px] px-4 py-2 w-max':
-									!mainStore.asideFullWidth,
-								'b-bg b-border rounded-lg': !mainStore.asideFullWidth,
-							}"
-							@click.stop
-						>
-							<template
-								v-for="child in item.child"
-								:key="child.id"
+						<Transition name="sidebar-link-menu-full">
+							<div
+								v-if="item.isActive && mainStore.asideFullWidth"
+								@click.stop
+								class="flex flex-col items-start justify-center mr-2 px-2 gap transition duration-300"
+							>
+								<template
+									v-for="child in item.child"
+									:key="child.id"
+								>
+									<div
+										class="w-full"
+										v-if="
+											activeMenuChild && !mainStore.asideFullWidth
+										"
+									>
+										<span
+											class="w-full text-left text-16-med text-c-primary-500"
+										>
+											{{ item.title }}
+										</span>
+										<div
+											class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-1 mb-4"
+										></div>
+									</div>
+									<nuxtLink
+										:to="child.path"
+										class="w-full h-[40px] flex items-center justify-start"
+									>
+										<component
+											:is="child.icon"
+											class="link-active-icon"
+										/>
+										<span class="link-active-text ml-3 text-16-med">
+											{{ child.title }}
+										</span>
+									</nuxtLink>
+								</template>
+								<template v-if="item.child.length < 1">
+									<div
+										class="w-full"
+										v-if="
+											activeMenuChild && !mainStore.asideFullWidth
+										"
+									>
+										<span
+											class="w-full text-left text-16-med text-c-primary-500"
+										>
+											{{ item.title }}
+										</span>
+										<div
+											class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-1 mb-4"
+										></div>
+									</div>
+									<div
+										class="w-full h-[40px] flex items-center justify-start"
+									>
+										<IconFolderClosed class="link-active-icon" />
+										<span class="link-active-text ml-3 text-16-med">
+											Пусто
+										</span>
+									</div>
+								</template>
+							</div>
+						</Transition>
+						<Transition name="sidebar-link-menu-hover">
+							<div
+								v-if="item.isActive && !mainStore.asideFullWidth"
+								@click.stop
+								class="sidebar-link-menu-hover b-bg"
 							>
 								<div
-									class="w-full"
-									v-if="activeMenuChild && !mainStore.asideFullWidth"
+									class="w-2 h-[40px] rounded-tr-lg rounded-br-lg absolute top-0 left-0 translate-x-[-2px] b-bg"
+								></div>
+								<template
+									v-for="child in item.child"
+									:key="child.id"
 								>
-									<span
-										class="w-full text-left text-16-med text-c-primary-500"
+									<div class="w-full mt-2">
+										<span
+											class="w-full text-left text-16-med text-c-primary-500"
+										>
+											{{ item.title }}
+										</span>
+										<div
+											class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-2 mb-4"
+										></div>
+									</div>
+									<nuxtLink
+										:to="child.path"
+										class="w-full h-[40px] flex items-center justify-start mb-2"
 									>
-										{{ item.title }}
-									</span>
+										<component
+											:is="child.icon"
+											class="link-active-icon"
+										/>
+										<span class="link-active-text ml-3 text-16-med">
+											{{ child.title }}
+										</span>
+									</nuxtLink>
+								</template>
+								<template v-if="item.child.length < 1">
+									<div class="w-full mt-2">
+										<span
+											class="w-full text-left text-16-med text-c-primary-500"
+										>
+											{{ item.title }}
+										</span>
+										<div
+											class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-2 mb-4"
+										></div>
+									</div>
 									<div
-										class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-1 mb-4"
-									></div>
-								</div>
-								<nuxtLink
-									:to="child.path"
-									class="w-full h-[40px] flex items-center justify-start"
-								>
-									<component
-										:is="child.icon"
-										class="link-active-icon"
-									/>
-									<span class="link-active-text ml-3 text-16-med">
-										{{ child.title }}
-									</span>
-								</nuxtLink>
-							</template>
-							<template v-if="item.child.length < 1">
-								<div
-									class="w-full"
-									v-if="activeMenuChild && !mainStore.asideFullWidth"
-								>
-									<span
-										class="w-full text-left text-16-med text-c-primary-500"
+										class="w-full h-[40px] flex items-center justify-start mb-2"
 									>
-										{{ item.title }}
-									</span>
-									<div
-										class="w-full h-[1px] bg-c-gray-t-200 dark:bg-c-gray-t-600 mt-1 mb-4"
-									></div>
-								</div>
-								<div
-									class="w-full h-[40px] flex items-center justify-start"
-								>
-									<IconFolderClosed class="link-active-icon" />
-									<span class="link-active-text ml-3 text-16-med">
-										Пусто
-									</span>
-								</div>
-							</template>
-						</div>
+										<IconFolderClosed class="link-active-icon" />
+										<span class="link-active-text ml-3 text-16-med">
+											Пусто
+										</span>
+									</div>
+								</template>
+							</div>
+						</Transition>
 					</div>
 				</li>
 			</ul>
@@ -342,5 +401,54 @@
 	}
 	.router-link-active .link-active-text {
 		@apply text-c-primary-500;
+	}
+
+	.sidebar-link-menu-hover {
+		@apply flex flex-col items-start justify-center mr-2 px-2 transition duration-300 absolute top-0 left-0 translate-x-[50px];
+	}
+	.sidebar-link-menu-hover {
+		@apply border-y-[1px] border-r-[1px] border-c-gray-t-300 dark:border-c-gray-t-600 rounded-tr-md rounded-br-md;
+	}
+
+	.link-text-enter-active,
+	.link-text-leave-active {
+		transition: all 0.3s ease-in-out;
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.link-text-enter-from,
+	.link-text-leave-to {
+		transition: all 0.3s ease-in-out;
+		opacity: 0;
+		transform: translateX(-42px);
+	}
+
+	.sidebar-link-menu-full-enter-active,
+	.sidebar-link-menu-full-leave-active {
+		transition: all 0.3s ease-in-out;
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.sidebar-link-menu-full-enter-from,
+	.sidebar-link-menu-full-leave-to {
+		transition: all 0.3s ease-in-out;
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+
+	.sidebar-link-menu-hover-enter-active,
+	.sidebar-link-menu-hover-leave-active {
+		transition: all 0.3s ease-in-out;
+		opacity: 1;
+		left: 0;
+	}
+
+	.sidebar-link-menu-hover-enter-from,
+	.sidebar-link-menu-hover-leave-to {
+		transition: all 0.3s ease-in-out;
+		opacity: 0;
+		left: -100%;
 	}
 </style>
