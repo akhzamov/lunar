@@ -20,7 +20,7 @@
 				{
 					id: 1,
 					itemID: 1,
-					title: "Продукты",
+					title: "Товары",
 					path: "/products",
 					icon: markRaw(IconTag03),
 				},

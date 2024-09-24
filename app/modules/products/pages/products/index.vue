@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 	import type { Breadcrumb } from "~/types/breadcrumb.typ";
-	import { useProductsStore } from "../stores/products";
+	import { useProductsStore } from "~/modules/products/stores/products";
 
 	definePageMeta({
 		middleware: "auth",

@@ -386,13 +386,18 @@
 									<td
 										class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium"
 									>
-										<button
-											type="button"
+										<NuxtLink
+											:to="{
+												path: `/products/${product.id}/edit`,
+												query: {
+													productName: product.name,
+												},
+											}"
 											class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
 										>
 											<IconEdit05 />
 											Изменить
-										</button>
+										</NuxtLink>
 									</td>
 								</tr>
 							</tbody>
