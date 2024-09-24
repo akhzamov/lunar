@@ -39,14 +39,9 @@
 			class="w-[540px] b-bg b-border p-12 rounded-lg flex flex-col items-center justify-start"
 		>
 			<img
-				src="/img/lunar-logo-dark.svg"
+				src="/logo.svg"
 				alt=""
-				class="w-[109px] mb-4 hidden dark:block"
-			/>
-			<img
-				src="/img/lunar-logo.svg"
-				alt=""
-				class="w-[109px] mb-4 block dark:hidden"
+				class="w-[60px] mb-4"
 			/>
 			<h3 class="text-24-bold">Авторизация</h3>
 			<div class="w-full flex flex-col gap-2 mt-6">
