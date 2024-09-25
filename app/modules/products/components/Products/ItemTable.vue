@@ -387,12 +387,7 @@
 										class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium"
 									>
 										<NuxtLink
-											:to="{
-												path: `/products/${product.id}/edit`,
-												query: {
-													productName: product.name,
-												},
-											}"
+											:to="`/products/${product.id}/edit`"
 											class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
 										>
 											<IconEdit05 />

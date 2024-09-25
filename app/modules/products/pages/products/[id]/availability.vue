@@ -52,7 +52,7 @@
 			<div class="w-full h-[600px]"></div>
 		</div>
 		<div class="relative">
-			<CommonProdutRoutes />
+			<CommonProductRoutes />
 		</div>
 	</div>
 </template>

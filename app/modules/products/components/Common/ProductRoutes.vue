@@ -31,12 +31,7 @@
 			:key="link.id"
 		>
 			<NuxtLink
-				:to="{
-					path: `/products/${route.params.id}/${link.path}`,
-					query: {
-						productName: route.query.productName,
-					},
-				}"
+				:to="`/products/${route.params.id}/${link.path}`"
 				class="relative h-[40px]"
 			>
 				<div

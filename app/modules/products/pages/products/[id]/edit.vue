@@ -21,10 +21,6 @@
 			path: `/products/${route.params.id}/edit`,
 		},
 	]);
-
-	onMounted(() => {
-		console.log(route.hash);
-	});
 </script>
 
 <template>
@@ -52,7 +48,7 @@
 			<div class="w-full h-[600px]"></div>
 		</div>
 		<div class="relative">
-			<CommonProdutRoutes />
+			<CommonProductRoutes />
 		</div>
 	</div>
 </template>
