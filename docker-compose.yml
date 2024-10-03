@@ -6,8 +6,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      # remove port 8080 for production
-      # - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
@@ -17,8 +15,8 @@ services:
     build: .
     restart: always
     expose:
-      - 80
-
+      - 3001
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`46.254.16.69`)"
+      - "traefik.http.routers.frontend.rule=Host(`lunar.credo-app.uz`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3001"
