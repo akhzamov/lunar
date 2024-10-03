@@ -18,7 +18,7 @@
 	const res = apiFetcher(
 		"http://37.143.9.75/api/attributes?attribute_group_id=1&page=1"
 	);
-	const productsStore = useProductsStore();
+	const productsStore1 = useProductsStore();
 	const breadcrumbs = reactive<Breadcrumb[]>([
 		{ id: 1, name: "Каталог", path: "" },
 		{ id: 2, name: "Товары", path: "/products" },
