@@ -10,25 +10,25 @@
 			id: 1,
 			name: "Основная Информация",
 			path: "edit",
-			icon: Edit05,
+			icon: markRaw(Edit05),
 		},
 		{
 			id: 2,
 			name: "Доступность",
 			path: "availability",
-			icon: Calendar,
+			icon: markRaw(Calendar),
 		},
 		{
 			id: 3,
 			name: "Медиа",
 			path: "media",
-			icon: Image03,
+			icon: markRaw(Image03),
 		},
 		{
 			id: 4,
 			name: "Вариантность",
 			path: "variants",
-			icon: Colors,
+			icon: markRaw(Colors),
 		},
 	]);
 </script>

@@ -9,11 +9,24 @@
 		title: "Products | Lunar",
 	});
 
+	const apiFetcher = $fetch.create({
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	const res = apiFetcher(
+		"http://37.143.9.75/api/attributes?attribute_group_id=1&page=1"
+	);
 	const productsStore = useProductsStore();
 	const breadcrumbs = reactive<Breadcrumb[]>([
 		{ id: 1, name: "Каталог", path: "" },
 		{ id: 2, name: "Товары", path: "/products" },
 	]);
+
+	onMounted(() => {
+		console.log(res);
+	});
 </script>
 
 <template>

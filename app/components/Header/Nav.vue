@@ -34,7 +34,7 @@
 
 <template>
 	<header
-		class="sticky top-0 right-0 z-20 w-full h-[64px] b-bg border-b border-c-gray-t-200 dark:border-c-gray-t-600"
+		class="sticky top-0 right-0 z-[200] w-full h-[64px] b-bg border-b border-c-gray-t-200 dark:border-c-gray-t-600"
 	>
 		<div
 			class="w-full h-full px-6 flex items-center justify-end gap-2"

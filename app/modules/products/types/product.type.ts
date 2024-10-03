@@ -10,3 +10,7 @@ export interface IProduct {
 	checked: boolean;
 	activeSkuList: boolean;
 }
+
+export interface ITag {
+	name: string;
+}

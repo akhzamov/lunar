@@ -121,7 +121,7 @@
 
 <template>
 	<div
-		class="sticky top-0 left-0 z-30 h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600"
+		class="sticky top-0 left-0 z-[300] h-screen flex flex-col b-bg border-r border-c-gray-t-200 dark:border-c-gray-t-600"
 		@mouseleave="handleMouseleaveInSidebar()"
 	>
 		<div

@@ -24,8 +24,8 @@
 			required: true,
 		},
 		modelValue: {
-			type: Number as PropType<number | null>,
-			default: null,
+			type: Number,
+			default: 0,
 			required: true,
 		},
 	});
@@ -35,7 +35,7 @@
 	const selectedItem = ref(props.defaultSelectText);
 	const openSelectMenu = ref(false);
 
-	const selectItem = (id: number | null) => {
+	const selectItem = (id: number) => {
 		selectedItemId.value = id;
 		props.data.forEach((item) => {
 			if (item.id == id) {
@@ -96,17 +96,14 @@
 				:class="[
 					{ 'bottom-[100%] translate-y-[-5px]': showPositionTop },
 				]"
-				class="absolute right-0 z-5 mt-2 w-full b-bg border-[1px] border-c-primary-500 flex items-center justify-between rounded-lg p-1"
+				class="absolute right-0 z-[20] mt-2 w-full b-bg border-[1px] border-c-primary-500 flex items-center justify-between rounded-lg p-1"
 				role="menu"
 			>
 				<div class="w-full flex flex-col items-start justify-center">
 					<div
-						@click="selectItem(null)"
-						class="w-full inline-block rounded-md cursor-pointer px-4 py-2 text-sm hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
-						role="menuitem"
-						tabindex="-1"
-						id="menu-item-0"
 						v-if="defaultSelectText.length > 0"
+						@click="selectItem(0)"
+						class="w-full inline-block rounded-md cursor-pointer px-4 py-2 text-sm hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
 					>
 						{{ defaultSelectText }}
 					</div>
@@ -116,8 +113,6 @@
 						@click="selectItem(item.id)"
 						class="w-full inline-block rounded-md cursor-pointer px-4 py-2 text-sm hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
 						role="menuitem"
-						tabindex="-1"
-						id="menu-item-0"
 					>
 						{{ item.name }}
 					</div>

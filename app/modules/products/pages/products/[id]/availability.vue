@@ -4,7 +4,6 @@
 
 	definePageMeta({
 		middleware: "auth",
-		layout: "products",
 	});
 	useSeoMeta({
 		title: "Products | Lunar",
@@ -31,20 +30,7 @@
 	<UiBreadcrumbs :breadcrumbs="breadcrumbs" />
 	<div class="flex flex-col">
 		<ProductsIDTopTitle />
-		<div class="my-8 flex flex-col gap-4">
-			<UiAlertInfo
-				text="В настоящее время этот продукт находится в стадии разработки и скрыт во всех каналах и группах клиентов."
-			/>
-			<UiAlertSuccess
-				text="В настоящее время этот продукт находится в стадии разработки и скрыт во всех каналах и группах клиентов."
-			/>
-			<UiAlertWarning
-				text="В настоящее время этот продукт находится в стадии разработки и скрыт во всех каналах и группах клиентов."
-			/>
-			<UiAlertDanger
-				text="В настоящее время этот продукт находится в стадии разработки и скрыт во всех каналах и группах клиентов."
-			/>
-		</div>
+		<UiAlertAlerts />
 	</div>
 	<div class="flex">
 		<div class="b-bg b-border rounded-xl p-6 flex-grow z-[15]">

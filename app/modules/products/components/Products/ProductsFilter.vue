@@ -38,8 +38,8 @@
 			name: "Только удаленные записи",
 		},
 	]);
-	const selectedBrand = ref<number | null>(null);
-	const selectedRecordFilter = ref<number | null>(null);
+	const selectedBrand = ref(0);
+	const selectedRecordFilter = ref(0);
 </script>
 
 <template>
