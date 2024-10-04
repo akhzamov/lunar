@@ -26,7 +26,6 @@ export default defineNuxtConfig({
 		"@pinia/nuxt",
 		"@nuxtjs/tailwindcss",
 		"@nuxtjs/color-mode",
-		"@nuxt/icon",
 	],
 
 	pinia: {
@@ -85,5 +84,6 @@ export default defineNuxtConfig({
 		prerender: {
 			routes: ["/index.html", "/404.html"],
 		},
+		preset: "static",
 	},
 });
