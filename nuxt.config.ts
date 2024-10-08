@@ -7,7 +7,11 @@ export default defineNuxtConfig({
 		compatibilityVersion: 4,
 	},
 
-	extends: ["./app/modules/auth", "./app/modules/products"],
+	extends: [
+		"./app/modules/auth",
+		"./app/modules/products",
+		"./app/modules/attribute-groups",
+	],
 
 	app: {
 		head: {

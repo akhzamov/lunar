@@ -47,7 +47,6 @@
 			<slot name="icon-l" />
 		</div>
 		<input
-			:value="props.modelValue"
 			@input="onInput"
 			:type="props.type"
 			class="outline-none border-none bg-transparent flex-grow h-full"

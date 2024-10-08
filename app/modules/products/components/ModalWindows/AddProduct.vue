@@ -2,6 +2,10 @@
 	import { useProductsStore } from "../../stores/products";
 
 	const productsStore = useProductsStore();
+	const productName = ref("");
+	const productSKU = ref("");
+	const productPrice = ref();
+	const productType = ref();
 	const handleCloseProductsModal = () => {
 		productsStore.productsModal = false;
 		document.body.style.overflow = "auto";
@@ -43,7 +47,7 @@
 						Название
 						<span class="text-c-error-500">*</span>
 					</label>
-					<UiInputBase />
+					<UiInputBase v-model="productName" />
 				</div>
 				<div class="w-full flex flex-col gap-3">
 					<label>
@@ -54,7 +58,7 @@
 						:data="productTypes"
 						defaultSelectText=""
 						label=""
-						v-model="data.productType"
+						v-model="productType"
 						:showMenu="true"
 						:showPositionTop="false"
 					/>
@@ -66,14 +70,14 @@
 						SKU
 						<span class="text-c-error-500">*</span>
 					</label>
-					<UiInputBase />
+					<UiInputBase v-model="productSKU" />
 				</div>
 				<div class="w-full flex flex-col gap-3">
 					<label>
 						Базовая цена
 						<span class="text-c-error-500">*</span>
 					</label>
-					<UiInputFormatter />
+					<UiInputFormatter v-model="productPrice" />
 				</div>
 			</div>
 			<div class="flex items-center justify-start gap-3 mt-6">

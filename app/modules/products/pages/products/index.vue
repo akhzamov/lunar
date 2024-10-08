@@ -16,7 +16,7 @@
 	});
 
 	const res = apiFetcher(
-		"http://37.143.9.75/api/attributes?attribute_group_id=1&page=1"
+		"https://api.credo-app.uz/api/attributes?attribute_group_id=1&page=1"
 	);
 	const productsStore1 = useProductsStore();
 	const breadcrumbs = reactive<Breadcrumb[]>([

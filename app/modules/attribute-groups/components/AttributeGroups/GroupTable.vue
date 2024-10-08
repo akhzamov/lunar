@@ -1,20 +1,24 @@
 <script lang="ts" setup>
 	import { useProductsStore } from "~/modules/products/stores/products";
+	import { useAttributeGroupsStore } from "~/modules/attribute-groups/stores/attributeGroups";
+	import { attributeGroupsList } from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
 
 	const productsStore = useProductsStore();
+	const attrGsStore = useAttributeGroupsStore();
 	const checkAll = ref(false);
 	const oneChecked = ref(false);
 	const checkedLength = ref(0);
-	const productsChecked = reactive<number[]>([]);
+	const attributeGroupsSelectedLength = reactive<number[]>([]);
 	const deleteButton = ref(false);
 	const allCheckedButton = ref(false);
-	const productsFilterRef = ref<HTMLElement | null>(null);
-	const productsFilterButtonRef = ref<HTMLElement | null>(null);
-	const tableFilterRef = ref<HTMLElement | null>(null);
-	const tableFilterButtonRef = ref<HTMLElement | null>(null);
-	const totalPages = ref(50);
+	const totalPages = computed(() => {
+		let totalPages;
+		totalPages = attrGsStore.attributeGroups
+			? attrGsStore.attributeGroups?.length / 10
+			: 0;
+		return totalPages;
+	});
 	const currentPage = ref(1);
-	const productsSearch = "";
 	const perPageList = reactive([
 		{ id: 1, name: "10" },
 		{ id: 2, name: "15" },
@@ -22,41 +26,17 @@
 	]);
 	const perPage = ref(1);
 
-	const handleClickOutsideProductsFilter = (event: MouseEvent) => {
-		if (
-			productsStore.activeProductsFilter &&
-			productsFilterButtonRef.value &&
-			!productsFilterButtonRef.value.contains(event.target as Node) &&
-			productsFilterRef.value &&
-			!productsFilterRef.value.contains(event.target as Node)
-		) {
-			productsStore.activeProductsFilter = false;
-		}
-	};
-
-	const handleClickOutsideTableFilter = (event: MouseEvent) => {
-		if (
-			productsStore.activeTableFilter &&
-			tableFilterButtonRef.value &&
-			!tableFilterButtonRef.value.contains(event.target as Node) &&
-			tableFilterRef.value &&
-			!tableFilterRef.value.contains(event.target as Node)
-		) {
-			productsStore.activeTableFilter = false;
-		}
-	};
-
 	const handleDeselect = () => {
 		checkAll.value = false;
 		deleteButton.value = false;
-		productsStore.filteredProductsList.forEach((product) => {
+		attrGsStore.attributeGroups?.forEach((product) => {
 			product.checked = false;
 		});
 	};
 
 	const handleAllSelect = () => {
 		checkAll.value = true;
-		productsStore.filteredProductsList.forEach((product) => {
+		attrGsStore.attributeGroups?.forEach((product) => {
 			product.checked = true;
 		});
 	};
@@ -70,31 +50,22 @@
 		}
 	};
 
-	const activeProductsFilter = () => {
-		productsStore.activeProductsFilter =
-			!productsStore.activeProductsFilter;
-	};
-
-	const activeTableFilter = () => {
-		productsStore.activeTableFilter =
-			!productsStore.activeTableFilter;
-	};
 
 	watchEffect(() => {
-		productsChecked.splice(0, productsChecked.length);
+		attributeGroupsSelectedLength.splice(0, attributeGroupsSelectedLength.length);
 		oneChecked.value = false;
 		checkedLength.value = 0;
-		productsStore.filteredProductsList.forEach((product) => {
-			if (product.checked) {
+		attrGsStore.attributeGroups?.forEach((item) => {
+			if (item.checked) {
 				oneChecked.value = true;
 				checkedLength.value += 1;
-				productsChecked.push(product.id);
+				attributeGroupsSelectedLength.push(item.id);
 			}
 		});
 	});
 
 	watch(checkedLength, () => {
-		if (checkedLength.value != productsStore.productsList.length) {
+		if (checkedLength.value != attrGsStore.attributeGroups?.length) {
 			allCheckedButton.value = false;
 			checkAll.value = false;
 			console.log("w");
@@ -106,34 +77,25 @@
 	});
 
 	onMounted(() => {
-		document.addEventListener(
-			"click",
-			handleClickOutsideProductsFilter
-		);
-		document.addEventListener("click", handleClickOutsideTableFilter);
-	});
-
-	onBeforeUnmount(() => {
-		document.removeEventListener(
-			"click",
-			handleClickOutsideProductsFilter
-		);
-		document.removeEventListener(
-			"click",
-			handleClickOutsideTableFilter
-		);
+		attrGsStore.attributeGroups = attributeGroupsList;
+		attrGsStore.attributeGroups.forEach((item) => {
+			item.checked = false;
+		});
 	});
 </script>
 
 <template>
-	<div class="h-max b-bg rounded-xl mt-6 select-none">
+	<div
+		class="h-max b-bg rounded-xl mt-6 select-none"
+		v-if="attrGsStore.attributeGroups"
+	>
 		<div
 			class="flex items-center justify-between rounded-tl-xl rounded-tr-xl border-[1px] border-c px-6 py-3"
 		>
 			<div class="relative w-max">
 				<UiButton
 					class="w-max"
-					v-if="checkAll || productsChecked.length > 0"
+					v-if="checkAll || attributeGroupsSelectedLength.length > 0"
 					@click="deleteButton = !deleteButton"
 					text="Массовое действие"
 					hover-bg-color="bg-c-gray-t-100 dark:bg-c-gray-t-700"
@@ -145,7 +107,7 @@
 				</UiButton>
 				<UiButton
 					class="w-max absolute top-[100%] left-0 translate-y-[4px]"
-					v-if="productsChecked.length > 0 && deleteButton"
+					v-if="attributeGroupsSelectedLength.length > 0 && deleteButton"
 					@click="deleteButton = false"
 					text="Удалить отмеченные"
 					text-color="text-c-error-600"
@@ -156,49 +118,6 @@
 						<IconTrash01 class="text-c-error-600" />
 					</template>
 				</UiButton>
-			</div>
-			<div class="flex items-center gap-3">
-				<UiInputIcon
-					v-model="productsSearch"
-					class="w-[320px]"
-					iconPosition="left"
-				>
-					<template v-slot:icon-l>
-						<IconSearchLg />
-					</template>
-				</UiInputIcon>
-				<div class="relative">
-					<div
-						@click="activeProductsFilter"
-						ref="productsFilterButtonRef"
-						class="productFilterButton"
-					>
-						<IconFilterFunnel02 />
-					</div>
-					<div
-						v-if="productsStore.activeProductsFilter"
-						ref="productsFilterRef"
-						class="absolute top-[100%] right-0 translate-y-[10px]"
-					>
-						<ProductsFilter />
-					</div>
-				</div>
-				<div class="relative">
-					<div
-						@click="activeTableFilter"
-						ref="tableFilterButtonRef"
-						class="productFilterButton"
-					>
-						<IconColumns03 />
-					</div>
-					<div
-						v-if="productsStore.activeTableFilter"
-						ref="tableFilterRef"
-						class="absolute top-[100%] right-0 translate-y-[10px]"
-					>
-						<ProductsTableFilter />
-					</div>
-				</div>
 			</div>
 		</div>
 		<div
@@ -243,45 +162,26 @@
 												v-model="checkAll"
 												@click="handleCheckAllClicked"
 											/>
-											Статус
+											Тип
 										</div>
 									</th>
 									<th
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-									></th>
-									<th
-										scope="col"
-										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
-										Название
-									</th>
-									<th
-										v-if="productsStore.brandTableShow"
-										scope="col"
-										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-									>
-										Бренд
-									</th>
-									<th
-										v-if="productsStore.skuTableShow"
-										scope="col"
-										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
-									>
-										SKU
+										Имя
 									</th>
 									<th
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
-										На складе
+										Предлог
 									</th>
 									<th
-										v-if="productsStore.productTypeTableShow"
 										scope="col"
 										class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
 									>
-										Тип продукта
+										Позиция
 									</th>
 									<th
 										scope="col"
@@ -293,102 +193,49 @@
 								class="divide-y divide-gray-200 dark:divide-neutral-700"
 							>
 								<tr
-									v-for="product in productsStore.filteredProductsList"
-									:key="product.id"
+									v-for="attr in attrGsStore.attributeGroups"
+									:key="attr.id"
 									class="hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
 									:class="{
 										'bg-c-gray-t-100 dark:bg-c-gray-t-700':
-											(checkAll && product.checked) ||
-											(product.checked && !checkAll),
+											(checkAll && attr.checked) ||
+											(attr.checked && !checkAll),
 									}"
 								>
 									<td
 										class="px-6 py-4 whitespace-nowrap text-sm font-medium border-l"
 										:class="{
-											'border-c-primary-600': product.checked,
-											'border-transparent': !product.checked,
+											'border-c-primary-600': attr.checked,
+											'border-transparent': !attr.checked,
 										}"
 									>
 										<div class="flex items-center gap-3">
-											<UiCheckbox v-model="product.checked" />
-											<span
-												v-if="product.status == 'published'"
-												class="px-2 py-[2px] bg-c-success-25 dark:bg-c-success-500-8 border-[1px] border-c-success-100 rounded-md text-c-success-500"
-											>
-												Опубликован
-											</span>
-											<span
-												v-if="product.status == 'draft'"
-												class="px-2 py-[2px] bg-c-warning-25 dark:bg-c-warning-500-8 border-[1px] border-c-warning-100 rounded-md text-c-warning-500"
-											>
-												Черновик
-											</span>
+											<UiCheckbox v-model="attr.checked" />
+											<span>{{ attr.type }}</span>
 										</div>
 									</td>
 									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<img
-											:src="product.image"
-											:alt="product.name"
-										/>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<span>{{ product.name }}</span>
+										<span>{{ attr.name }}</span>
 									</td>
 									<td
 										class="px-6 py-4 whitespace-nowrap text-sm"
 										v-if="productsStore.brandTableShow"
 									>
-										{{ product.brand }}
-									</td>
-									<td
-										v-if="productsStore.skuTableShow"
-										class="relative px-6 py-4 whitespace-nowrap text-sm"
-									>
-										<span
-											@mouseenter="product.activeSkuList = true"
-											@mouseleave="product.activeSkuList = false"
-											class="cursor-pointer"
-										>
-											{{ product.sku[0] }}
-										</span>
-										<div
-											v-if="
-												product.sku.length > 1 &&
-												product.activeSkuList
-											"
-											class="sku-list absolute z-[30] top-[0] left-0 translate-y-[-70%] px-3 py-2 bg-c-gray-t-50 dark:bg-c-gray-t-700 rounded-md"
-										>
-											<template v-for="(sku, index) in product.sku">
-												{{ sku
-												}}<span v-if="index != product.sku.length - 1"
-													>,
-												</span>
-											</template>
-											<div
-												class="absolute bottom-0 z-[-1] left-0 w-3 h-3 bg-c-gray-t-50 dark:bg-c-gray-t-700 rotate-[-45deg] translate-x-[12px] translate-y-[6px]"
-											></div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<span>{{ product.warehouse }}</span>
+										{{ attr.handle }}
 									</td>
 									<td
 										class="px-6 py-4 whitespace-nowrap text-sm"
 										v-if="productsStore.productTypeTableShow"
 									>
 										<span>
-											{{
-												product.type == "new"
-													? "Новый тип продукта"
-													: "Сток"
-											}}
+											{{ attr.position }}
 										</span>
 									</td>
 									<td
 										class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium"
 									>
 										<NuxtLink
-											:to="`/products/${product.id}/edit`"
+											:to="`/products/${attr.id}/edit`"
 											class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
 										>
 											<IconEdit05 />
@@ -420,10 +267,12 @@
 				/>
 			</div>
 			<UiPagination
+				v-if="totalPages > 1"
 				:totalPages="totalPages"
 				:currentPage="currentPage"
 				v-model="currentPage"
 			/>
+			<div v-if="totalPages < 1"></div>
 		</div>
 	</div>
 </template>

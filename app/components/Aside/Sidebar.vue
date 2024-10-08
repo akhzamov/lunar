@@ -4,6 +4,7 @@
 	import IconCheckDone01 from "~/components/icon/CheckDone01.vue";
 	import IconSettings01 from "~/components/icon/Settings01.vue";
 	import IconTag03 from "~/components/icon/Tag03.vue";
+	import Settings03 from "~/components/icon/Settings03.vue";
 	import { useMainStore } from "~/stores/main";
 
 	const mainStore = useMainStore();
@@ -38,7 +39,15 @@
 			title: "Настройки",
 			icon: markRaw(IconSettings01),
 			isActive: false,
-			child: [],
+			child: [
+				{
+					id: 1,
+					itemID: 4,
+					title: "Группа Атрибутов",
+					path: "/attribute-groups",
+					icon: markRaw(Settings03),
+				},
+			],
 		},
 	]);
 	const activeMenuChild = ref(false);
@@ -142,8 +151,7 @@
 				class="w-[40px] h-[40px] flex items-center justify-center border-y border-r border-c-gray-200 dark:border-c-gray-t-600 rounded-tr-lg rounded-br-lg absolute top-0 right-0 translate-x-[40px] z-50 translate-y-[12px] cursor-pointer"
 				@click="mainStore.asideFullWidth = !mainStore.asideFullWidth"
 			>
-				<Icon
-					name="heroicons:chevron-left"
+				<IconChevronLeft
 					class="transition-all duration-300"
 					:class="{ 'rotate-[180deg]': !mainStore.asideFullWidth }"
 				/>
@@ -178,7 +186,7 @@
 							<TransitionGroup name="link-text">
 								<div
 									v-if="mainStore.asideFullWidth"
-									class="flex items-center gap-10"
+									class="flex items-center gap-16"
 								>
 									<span
 										class="link-active-text text-16-med min-w-[100px] w-max"
@@ -243,7 +251,7 @@
 							<Transition name="link-text">
 								<div
 									v-if="mainStore.asideFullWidth"
-									class="flex items-center gap-10"
+									class="flex items-center gap-16"
 								>
 									<span
 										class="link-active-text text-16-med min-w-[100px] w-max"

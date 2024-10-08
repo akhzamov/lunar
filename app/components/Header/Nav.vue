@@ -5,6 +5,7 @@
 	const authCookie = useCookie("auth");
 	const userMenuRef = ref<HTMLElement | null>(null);
 	const toggleButtonRef = ref<HTMLElement | null>(null);
+	const navbarSearch = ref("");
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (
@@ -40,6 +41,7 @@
 			class="w-full h-full px-6 flex items-center justify-end gap-2"
 		>
 			<UiInputIcon
+				v-model="navbarSearch"
 				class="w-[320px]"
 				iconPosition="left"
 			>
