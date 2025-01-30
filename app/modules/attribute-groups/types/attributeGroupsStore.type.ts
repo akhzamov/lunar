@@ -1,5 +1,13 @@
-import type { IAttributeGroups } from "~/modules/attribute-groups/types/attributeGroups.type";
+import type {
+  IAttributeGroup,
+  IAttributeGroupResponseMeta,
+  IAttributeGroups,
+} from "~/modules/attribute-groups/types/attributeGroups.type";
 
 export interface IAttributeGroupsStore {
-	attributeGroups: IAttributeGroups[] | null;
+  attributeGroups: IAttributeGroup[] | null;
+  attributeGroup: IAttributeGroup | null;
+  attributeGroupMeta: IAttributeGroupResponseMeta | null;
+  page: number;
+  perPage: number;
 }

@@ -4,35 +4,39 @@ import type { IProduct } from "~/modules/products/types/product.type";
 import { productsList } from "~/modules/products/components/Products/products.data";
 
 export const useProductsStore = defineStore("products", {
-	state: (): IProductStore => ({
-		activeFilterTab: 1,
-		productsList: productsList,
-		activeProductsFilter: false,
-		activeTableFilter: false,
-		brandTableShow: true,
-		skuTableShow: true,
-		productTypeTableShow: true,
-		productsModal: false,
-	}),
+  state: (): IProductStore => ({
+    activeFilterTab: 1,
+    productsList: productsList,
+    filteredProductsList: productsList,
+    activeProductsFilter: false,
+    activeTableFilter: false,
+    brandTableShow: true,
+    skuTableShow: true,
+    productTypeTableShow: true,
+    productsModal: false,
+  }),
 
-	actions: {},
+  actions: {
+    filterList(): void {
+      switch (this.activeFilterTab) {
+        case 1:
+          this.filteredProductsList = this.productsList; // Все товары
+          break;
+        case 2:
+          this.filteredProductsList = this.productsList.filter(
+            (product) => product.status === "published"
+          ); // Опубликованные товары
+          break;
+        case 3:
+          this.filteredProductsList = this.productsList.filter(
+            (product) => product.status === "draft"
+          ); // Черновики
+          break;
+        default:
+          this.filteredProductsList = this.productsList; // По умолчанию все товары
+      }
+    },
+  },
 
-	getters: {
-		filteredProductsList(state): IProduct[] {
-			switch (state.activeFilterTab) {
-				case 1:
-					return state.productsList;
-				case 2:
-					return state.productsList.filter(
-						(product) => product.status === "published"
-					);
-				case 3:
-					return state.productsList.filter(
-						(product) => product.status === "draft"
-					);
-				default:
-					return state.productsList;
-			}
-		},
-	},
+  getters: {},
 });

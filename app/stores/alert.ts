@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { IAlertStore } from "~/types/alertStore.type";
+import type { IAlertStore } from "~/types/Stores/alertStore.type";
 
 export const useAlertStore = defineStore("alert", {
 	state: (): IAlertStore => ({
