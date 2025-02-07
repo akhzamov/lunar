@@ -6,6 +6,7 @@ import IconSettings01 from "~/components/icon/Settings01.vue";
 import IconTag03 from "~/components/icon/Tag03.vue";
 import Settings03 from "~/components/icon/Settings03.vue";
 import Translate01 from "~/components/icon/Translate01.vue";
+import DotsGrid from "~/components/icon/DotsGrid.vue";
 import { useMainStore } from "~/stores/main";
 
 const mainStore = useMainStore();
@@ -22,9 +23,16 @@ const menuItems = reactive([
       {
         id: 1,
         itemID: 1,
-        title: "Товары",
+        title: "Продукты",
         path: "/products",
         icon: markRaw(IconTag03),
+      },
+      {
+        id: 1,
+        itemID: 1,
+        title: "Типы продуктов",
+        path: "/product-types",
+        icon: markRaw(DotsGrid),
       },
     ],
   },

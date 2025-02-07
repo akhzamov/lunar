@@ -128,8 +128,8 @@ const createAndReopenAttribute = () =>
   });
 const editAttribute = () =>
   handleAction({
-    successMessage: "Язык успешно изменен",
-    redirectCallback: () => router.push("/attribute-groups"),
+    successMessage: "Группа атрибутов изменена успешно",
+    redirectCallback: () => router.go(1),
   });
 
 watch(
@@ -163,7 +163,7 @@ onMounted(async () => {
 <template>
   <div class="h-max b-bg rounded-xl mt-6 select-none p-6 border border-c">
     <form class="relative" @submit.prevent>
-      <div class="flex flex-col items-start gap-2 mt-3 z-[100]">
+      <div class="flex flex-col items-start gap-2 mt-3 z-[50]">
         <p>Тип <span class="text-c-error-500">*</span></p>
         <UiSelect
           :array="attributeGroupTypes"

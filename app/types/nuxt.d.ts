@@ -3,6 +3,7 @@ import type { AttributeGroupRep } from "~/modules/attribute-groups/repositories/
 import type { AuthRep } from "~/modules/auth/repositories/auth";
 import type { ProductsRep } from "~/modules/products/repositories/products";
 import type { LangSettingsRep } from "~/repositories/langSettings";
+import type { ProductTypesRep } from "~/modules/products/repositories/productTypes";
 
 declare module "#app" {
   interface NuxtApp {
@@ -11,5 +12,6 @@ declare module "#app" {
     $attributeRep: AttributeRep;
     $attributeGroupRep: AttributeGroupRep;
     $langSettingsRep: LangSettingsRep;
+    $productTypesRep: ProductTypesRep;
   }
 }

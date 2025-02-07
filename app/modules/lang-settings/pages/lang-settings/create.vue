@@ -19,7 +19,7 @@ const breadcrumbs = reactive<IBreadcrumb[]>([
   <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
   <div class="flex flex-col">
     <div class="flex items-center justify-between">
-      <h2 class="text-30-semi">Добавление Языка</h2>
+      <h2 class="text-30-semi">Добавление языка</h2>
     </div>
     <LangSettingsCreateAndEdit type="create" />
   </div>

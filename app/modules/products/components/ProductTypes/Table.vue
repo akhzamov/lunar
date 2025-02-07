@@ -1,22 +1,20 @@
 <script lang="ts" setup>
-import { useProductsStore } from "~/modules/products/stores/products";
-import { useAttributeGroupsStore } from "~/modules/attribute-groups/stores/attributeGroups";
-import { getAttributeGroups } from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
+import { getProductTypes } from "./productTypes.data";
+import { useProductTypesStore } from "../../stores/productTypes";
 
-const productsStore = useProductsStore();
-const attrGsStore = useAttributeGroupsStore();
+const productTypesStore = useProductTypesStore();
 const checkAll = ref(false);
 const deleteButton = ref(false);
 
 onMounted(async () => {
-  await getAttributeGroups();
+  await getProductTypes();
 });
 </script>
 
 <template>
   <div
     class="h-max b-bg rounded-xl mt-6 select-none"
-    v-if="attrGsStore.attributeGroups"
+    v-if="productTypesStore.productTypes"
   >
     <div
       class="flex items-center justify-between rounded-tl-xl rounded-tr-xl border-[1px] border-c px-6 py-3"
@@ -50,11 +48,11 @@ onMounted(async () => {
       </div>
     </div>
     <UiTopAllSelect
-      :array="attrGsStore.attributeGroups"
+      :array="productTypesStore.productTypes"
       v-model:check-all="checkAll"
       @update:array="
         (updatedArray: any) => {
-          attrGsStore.attributeGroups = updatedArray;
+          productTypesStore.productTypes = updatedArray;
         }
       "
     />
@@ -73,26 +71,26 @@ onMounted(async () => {
                   >
                     <div class="flex items-center gap-3">
                       <UiCheckbox v-model="checkAll" />
-                      Тип
+                      Имя
                     </div>
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
                   >
-                    Имя
+                    Кол-во продуктов
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
                   >
-                    Предлог
+                    Атрибуты продуктов
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
                   >
-                    Позиция
+                    Атрибуты вариантов
                   </th>
                   <th
                     scope="col"
@@ -102,48 +100,40 @@ onMounted(async () => {
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                 <tr
-                  v-for="attr in attrGsStore.attributeGroups"
-                  :key="attr.id"
+                  v-for="type in productTypesStore.productTypes"
+                  :key="type.id"
                   class="hover:bg-c-gray-t-100 dark:hover:bg-c-gray-t-700"
                   :class="{
                     'bg-c-gray-t-100 dark:bg-c-gray-t-700':
-                      (checkAll && attr.checked) || (attr.checked && !checkAll),
+                      (checkAll && type.checked) || (type.checked && !checkAll),
                   }"
                 >
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm font-medium border-l"
                     :class="{
-                      'border-c-primary-600': attr.checked,
-                      'border-transparent': !attr.checked,
+                      'border-c-primary-600': type.checked,
+                      'border-transparent': !type.checked,
                     }"
                   >
                     <div class="flex items-center gap-3">
-                      <UiCheckbox v-model="attr.checked" />
-                      <span>{{ attr.attributable_type }}</span>
+                      <UiCheckbox v-model="type.checked" />
+                      <span>{{ type.name }}</span>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span>{{ attr.name.en }}</span>
+                    {{ type.products_count }}
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm"
-                    v-if="productsStore.brandTableShow"
-                  >
-                    {{ attr.handle }}
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    {{ type.product_attributes_count }}
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm"
-                    v-if="productsStore.productTypeTableShow"
-                  >
-                    <span>
-                      {{ attr.position }}
-                    </span>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    {{ type.variant_attributes_count }}
                   </td>
                   <td
                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium"
                   >
                     <NuxtLink
-                      :to="`/attribute-groups/${attr.id}/edit`"
+                      :to="`/product-types/${type.id}/edit`"
                       class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
                     >
                       <IconEdit05 />
@@ -158,9 +148,9 @@ onMounted(async () => {
       </div>
     </div>
     <UiPerPage
-      :total-pages="attrGsStore.attributeGroupMeta?.total ?? 0"
-      v-model:current-page="attrGsStore.page"
-      v-model:per-page="attrGsStore.perPage"
+      :total-pages="productTypesStore.meta?.total ?? 0"
+      v-model:current-page="productTypesStore.page"
+      v-model:per-page="productTypesStore.perPage"
     />
   </div>
   <div class="loader-block mt-6" v-else>

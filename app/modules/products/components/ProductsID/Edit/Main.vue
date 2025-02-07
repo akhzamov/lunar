@@ -40,7 +40,7 @@ const types = ref([
 
 <template>
   <div class="relative">
-    <h3 class="text-20-semi">Основная Информация</h3>
+    <h3 class="text-20-semi">Основная информация</h3>
     <div class="flex flex-col items-start gap-2 mt-3 z-[100]">
       <p>Бренд</p>
       <div class="w-full flex gap-2">

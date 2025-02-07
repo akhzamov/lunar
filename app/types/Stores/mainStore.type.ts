@@ -6,4 +6,5 @@ export interface IMainStore {
   staff: TStaff | null;
   loader: boolean;
   langs: string[];
+  langsFull: { id: number; code: string; default: 1 | 0 }[] | null;
 }

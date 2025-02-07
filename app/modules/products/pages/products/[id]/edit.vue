@@ -11,7 +11,7 @@ useSeoMeta({
 const route = useRoute();
 const breadcrumbs = reactive<IBreadcrumb[]>([
   { id: 1, name: "Каталог", path: "" },
-  { id: 2, name: "Товары", path: "/products" },
+  { id: 2, name: "Продукты", path: "/products" },
   {
     id: 3,
     name: `Основная информация`,
@@ -23,10 +23,11 @@ const breadcrumbs = reactive<IBreadcrumb[]>([
 <template>
   <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
   <div class="flex flex-col">
-    <ProductsIDTopTitle />
-    <UiAlertAlerts />
+    <div class="flex items-center justify-between">
+      <h2 class="text-30-semi">Основная информация</h2>
+    </div>
   </div>
-  <div class="flex">
+  <div class="flex mt-6">
     <div class="b-bg b-border rounded-xl p-6 flex-grow z-[20]">
       <ProductsIDEditMain />
     </div>

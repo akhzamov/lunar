@@ -121,7 +121,7 @@ watchEffect(() => {
         v-if="showMenu"
         :class="[{ 'translate-y-[-5px]': showMenu }]"
         :style="`${menuOpenPosition == 'top' ? 'bottom' : 'top'}: 100%`"
-        class="absolute right-0 z-[20] mt-2 w-full b-bg border-[1px] border-c-primary-500 flex items-center justify-between rounded-lg p-1"
+        class="absolute right-0 z-[2000] mt-2 w-full b-bg border-[1px] border-c-primary-500 flex items-center justify-between rounded-lg p-1"
         role="menu"
       >
         <div class="w-full flex flex-col items-start justify-center">

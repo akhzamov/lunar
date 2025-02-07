@@ -23,11 +23,11 @@ const data = reactive({
 <template>
   <div
     @click="handleCloseProductsModal()"
-    class="fixed top-0 left-0 w-full h-screen flex items-center justify-center z-[60] bg-c-gray-t-450-60"
+    class="fixed top-0 left-0 w-full h-screen flex items-center justify-center z-[1000] bg-c-gray-t-450-60"
   >
     <div @click.stop class="w-[890px] h-max b-border-300 b-bg rounded-lg p-6">
       <div class="flex items-center justify-between">
-        <h4 class="text-white">Создать товар</h4>
+        <h4 class="text-white">Создать продукт</h4>
         <UiButton
           @click="handleCloseProductsModal"
           hoverBgColor="bg-c-gray-t-100 dark:bg-c-gray-t-700"

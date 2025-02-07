@@ -1,10 +1,16 @@
 import type { ILoginStaff } from "~/types/Auth/auth.type";
 import type {
-  IAttributeByIdResponse,
-  IAttributeResponse,
-} from "../types/attributes.type";
+  IProductType,
+  IProductTypeId,
+  IProductTypeResponse,
+} from "../types/productType.type";
 
-export class AttributeRep {
+type TBody = {
+  email: string;
+  password: string;
+};
+
+export class ProductTypesRep {
   private async request<T>(
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
     url: string,
@@ -16,16 +22,16 @@ export class AttributeRep {
     });
   }
 
-  async getAttributes(
+  async getProductTypes(
     params?: Record<string, any>,
     headers?: Record<string, string>
-  ): Promise<IAttributeResponse> {
+  ): Promise<IProductTypeResponse> {
     const config = useRuntimeConfig();
     const authTokenCookie = useCookie("authToken");
     const authToken = authTokenCookie.value || "";
-    return await this.request<IAttributeResponse>(
+    return await this.request<IProductTypeResponse>(
       "GET",
-      `${config.public.apiBaseUrl}/attributes/paginate`,
+      `${config.public.apiBaseUrl}/types/paginate`,
       {
         params: {
           ...params,
@@ -34,23 +40,24 @@ export class AttributeRep {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          // "Origin": window.location.origin,
           ...headers,
         },
       }
     );
   }
 
-  async getAttributeById(
+  async getProductTypeById(
     id: number,
     params?: Record<string, any>,
     headers?: Record<string, string>
-  ): Promise<IAttributeByIdResponse> {
+  ): Promise<IProductTypeId> {
     const config = useRuntimeConfig();
     const authTokenCookie = useCookie("authToken");
     const authToken = authTokenCookie.value || "";
-    return await this.request<IAttributeByIdResponse>(
+    return await this.request<IProductTypeId>(
       "GET",
-      `${config.public.apiBaseUrl}/attributes/${id}`,
+      `${config.public.apiBaseUrl}/types/${id}`,
       {
         params: {
           ...params,
@@ -59,70 +66,14 @@ export class AttributeRep {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          // "Origin": window.location.origin,
           ...headers,
         },
       }
     );
   }
 
-  async createAttribute(
-    body: Record<string | number | symbol, any>,
-    params?: Record<string, any>,
-    headers?: Record<string, string>
-  ): Promise<IAttributeByIdResponse> {
-    const config = useRuntimeConfig();
-    const authTokenCookie = useCookie("authToken");
-    const authToken = authTokenCookie.value || "";
-    return await this.request<IAttributeByIdResponse>(
-      "POST",
-      `${config.public.apiBaseUrl}/attributes`,
-      {
-        params: {
-          ...params,
-        },
-        body: {
-          ...body,
-        },
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          ...headers,
-        },
-      }
-    );
-  }
-
-  async updateAttributeById(
-    id: string,
-    body: Record<string | number | symbol, any>,
-    params?: Record<string, any>,
-    headers?: Record<string, string>
-  ): Promise<IAttributeByIdResponse> {
-    const config = useRuntimeConfig();
-    const authTokenCookie = useCookie("authToken");
-    const authToken = authTokenCookie.value || "";
-    return await this.request<IAttributeByIdResponse>(
-      "PUT",
-      `${config.public.apiBaseUrl}/attributes/${id}`,
-      {
-        params: {
-          ...params,
-        },
-        body: {
-          ...body,
-        },
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          ...headers,
-        },
-      }
-    );
-  }
-
-  async deleteAttributes(
+  async createProductType(
     body: Record<string | number | symbol, any>,
     params?: Record<string, any>,
     headers?: Record<string, string>
@@ -132,7 +83,7 @@ export class AttributeRep {
     const authToken = authTokenCookie.value || "";
     return await this.request<ILoginStaff>(
       "POST",
-      `${config.public.apiBaseUrl}/attributes/bulk-destroy`,
+      `${config.public.apiBaseUrl}/types`,
       {
         params: {
           ...params,
@@ -144,14 +95,74 @@ export class AttributeRep {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          // "Origin": window.location.origin,
           ...headers,
         },
       }
     );
   }
 
-  async deleteAttributeById(
-    id: string,
+  async updateProductTypeById(
+    id: number,
+    body: Record<string | number | symbol, any>,
+    params?: Record<string, any>,
+    headers?: Record<string, string>
+  ): Promise<ILoginStaff> {
+    const config = useRuntimeConfig();
+    const authTokenCookie = useCookie("authToken");
+    const authToken = authTokenCookie.value || "";
+    return await this.request<ILoginStaff>(
+      "PUT",
+      `${config.public.apiBaseUrl}/types/${id}`,
+      {
+        params: {
+          ...params,
+        },
+        body: {
+          ...body,
+        },
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          // "Origin": window.location.origin,
+          ...headers,
+        },
+      }
+    );
+  }
+
+  async deleteProductTypes(
+    body: Record<string | number | symbol, any>,
+    params?: Record<string, any>,
+    headers?: Record<string, string>
+  ): Promise<ILoginStaff> {
+    const config = useRuntimeConfig();
+    const authTokenCookie = useCookie("authToken");
+    const authToken = authTokenCookie.value || "";
+    return await this.request<ILoginStaff>(
+      "POST",
+      `${config.public.apiBaseUrl}/types/bulk-destroy`,
+      {
+        params: {
+          ...params,
+        },
+        body: {
+          ...body,
+        },
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          // "Origin": window.location.origin,
+          ...headers,
+        },
+      }
+    );
+  }
+
+  async deleteProductTypeById(
+    id: number,
     params?: Record<string, any>,
     headers?: Record<string, string>
   ): Promise<ILoginStaff> {
@@ -160,7 +171,7 @@ export class AttributeRep {
     const authToken = authTokenCookie.value || "";
     return await this.request<ILoginStaff>(
       "DELETE",
-      `${config.public.apiBaseUrl}/attributes/${id}`,
+      `${config.public.apiBaseUrl}/types/${id}`,
       {
         params: {
           ...params,
@@ -169,6 +180,7 @@ export class AttributeRep {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          // "Origin": window.location.origin,
           ...headers,
         },
       }

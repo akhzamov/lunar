@@ -43,7 +43,7 @@ const deleteLang = async () => {
   <UiBreadcrumbs :breadcrumbs="breadcrumbs" />
   <div class="flex flex-col">
     <div class="flex items-center justify-between">
-      <h2 class="text-30-semi">Изменение Языка</h2>
+      <h2 class="text-30-semi">Изменение языка</h2>
       <UiButton
         text="Удалить язык"
         text-color="text-c-gray-t-50"

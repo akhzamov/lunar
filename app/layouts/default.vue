@@ -1,14 +1,12 @@
 <script lang="ts" setup>
+import { getAttributes } from "~/modules/attribute-groups/components/AttributeGroups/attributes.data";
 import { getLanguages } from "~/modules/lang-settings/components/langSettings/langSettings.data";
 import { useProductsStore } from "~/modules/products/stores/products";
 import { useMainStore } from "~/stores/main";
 
 const productsStore = useProductsStore();
 const mainStore = useMainStore();
-
-onMounted(async () => {
-  await getLanguages();
-});
+getLanguages();
 </script>
 
 <template>

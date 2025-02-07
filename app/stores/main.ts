@@ -8,6 +8,7 @@ export const useMainStore = defineStore("main", {
     staff: null,
     loader: false,
     langs: [],
+    langsFull: null,
   }),
   actions: {},
 });

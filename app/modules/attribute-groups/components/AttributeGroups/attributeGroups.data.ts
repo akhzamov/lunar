@@ -39,7 +39,6 @@ export async function deleteAttributeGroupById(id: number) {
   mainStore.loader = true;
   try {
     const res = await $attributeGroupRep.deleteAttributeById(id);
-    getAttributeGroups();
     mainStore.loader = false;
     return res;
   } catch (error) {
@@ -79,7 +78,6 @@ export async function updateAttributeGroupById(
   mainStore.loader = true;
   try {
     const res = await $attributeGroupRep.updateAttributeGroupById(id, body);
-    getAttributeGroups();
     mainStore.loader = false;
     return res;
   } catch (error) {

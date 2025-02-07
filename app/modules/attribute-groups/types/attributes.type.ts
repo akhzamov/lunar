@@ -13,6 +13,44 @@ export interface IAttribute {
   type: string;
   validation_rules: string | null;
   checked: boolean;
+  attribute_group_id: number;
+  configuration: {
+    type: string;
+    values?:
+      | {
+          richtext?: boolean;
+          min?: number | null;
+          max?: number | null;
+        }
+      | { id: number; name: string; value: string }[];
+  };
+  section: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ICreateAttributeBody {
+  handle: string;
+  searchable: boolean;
+  filterable: boolean;
+  required: boolean;
+  type: string;
+  attributeGroupId: number;
+  configuration:
+    | {
+        type: string;
+        values?: {
+          richtext?: boolean;
+          min?: number | null;
+          max?: number | null;
+        };
+      }
+    | {
+        type: string;
+        values: { id: number; name: string; value: string }[];
+      };
+  name: Record<string, string>;
+  description: Record<string, string>;
 }
 
 export interface IAttributeResponseLinks {
