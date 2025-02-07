@@ -25,16 +25,6 @@ const breadcrumbs = reactive<IBreadcrumb[]>([
   <div class="flex flex-col">
     <div class="flex items-center justify-between">
       <h2 class="text-30-semi">Создание типа продуктов</h2>
-      <UiButton
-        text="Удалить тип продукта"
-        text-color="text-c-gray-t-50"
-        bg-color="bg-c-error-500"
-        :border-hide="true"
-        hover-bg-color="bg-c-error-700"
-        px="px-4"
-        py="py-[10px]"
-      >
-      </UiButton>
     </div>
     <ProductTypesCreateAndEdit type="create" />
   </div>

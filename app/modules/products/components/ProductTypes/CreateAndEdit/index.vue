@@ -157,46 +157,46 @@ const itemCheck = (
 
 onMounted(async () => {
   if (props.type == "edit") {
-    await getAttributeGroups();
     await getProductTypeById(Number(route.params.id));
     name.value = productTypesStore.productType?.name ?? "";
-    if (attrGsStore.attributeGroups) {
-      productTypesStore.productAttributes = [];
-      productTypesStore.variantsAttributes = [];
-      attrGsStore.attributeGroups.forEach(async (item) => {
-        if (item.attributable_type == "product") {
-          const res = await getAttributes(item.id.toString());
-          productTypesStore.productType?.product_attributes.forEach((type) => {
-            res?.forEach((item) => {
-              if (item.id == type.id) {
-                item.checked = true;
-                products.value.add(item.id);
-              }
-            });
+  }
+  await getAttributeGroups();
+  if (attrGsStore.attributeGroups) {
+    productTypesStore.productAttributes = [];
+    productTypesStore.variantsAttributes = [];
+    attrGsStore.attributeGroups.forEach(async (item) => {
+      if (item.attributable_type == "product") {
+        const res = await getAttributes(item.id.toString());
+        productTypesStore.productType?.product_attributes.forEach((type) => {
+          res?.forEach((item) => {
+            if (item.id == type.id) {
+              item.checked = true;
+              products.value.add(item.id);
+            }
           });
-          const attributes = {
-            title: item.name[defaultLanguage] ?? "",
-            attributes: res ?? [],
-          };
-          productTypesStore.productAttributes.push(attributes);
-        } else if (item.attributable_type == "product_variant") {
-          const res = await getAttributes(item.id.toString());
-          productTypesStore.productType?.product_attributes.forEach((type) => {
-            res?.forEach((item) => {
-              if (item.id == type.id) {
-                item.checked = true;
-                variants.value.add(item.id);
-              }
-            });
+        });
+        const attributes = {
+          title: item.name[defaultLanguage] ?? "",
+          attributes: res ?? [],
+        };
+        productTypesStore.productAttributes.push(attributes);
+      } else if (item.attributable_type == "product_variant") {
+        const res = await getAttributes(item.id.toString());
+        productTypesStore.productType?.product_attributes.forEach((type) => {
+          res?.forEach((item) => {
+            if (item.id == type.id) {
+              item.checked = true;
+              variants.value.add(item.id);
+            }
           });
-          const attributes = {
-            title: item.name[defaultLanguage] ?? "",
-            attributes: res ?? [],
-          };
-          productTypesStore.variantsAttributes.push(attributes);
-        }
-      });
-    }
+        });
+        const attributes = {
+          title: item.name[defaultLanguage] ?? "",
+          attributes: res ?? [],
+        };
+        productTypesStore.variantsAttributes.push(attributes);
+      }
+    });
   }
 });
 </script>
@@ -204,7 +204,7 @@ onMounted(async () => {
 <template>
   <div
     class="h-max b-bg rounded-xl mt-6 select-none p-6 border border-c"
-    v-if="productTypesStore.productType"
+    v-if="(productTypesStore.productType && type == 'edit') || true"
   >
     <form class="relative" @submit.prevent>
       <div class="flex flex-col items-start gap-2 mt-3 z-[90]">
@@ -223,10 +223,14 @@ onMounted(async () => {
   <div
     class="h-max b-bg rounded-xl mt-6 select-none p-6 border border-c"
     v-if="
-      attrGsStore.attributeGroups &&
-      productTypesStore.productAttributes &&
-      productTypesStore.variantsAttributes &&
-      productTypesStore.productType
+      (attrGsStore.attributeGroups &&
+        productTypesStore.productAttributes &&
+        productTypesStore.variantsAttributes &&
+        productTypesStore.productType &&
+        type == 'edit') ||
+      (attrGsStore.attributeGroups &&
+        productTypesStore.productAttributes &&
+        productTypesStore.variantsAttributes)
     "
   >
     <form class="relative" @submit.prevent>
