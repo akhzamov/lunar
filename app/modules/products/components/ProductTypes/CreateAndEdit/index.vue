@@ -135,23 +135,11 @@ const editAttribute = () =>
     redirectCallback: () => router.go(1),
   });
 
-const itemCheck = (
-  id: number,
-  checked: boolean,
-  type: "products" | "variants"
-) => {
-  if (type == "products") {
-    if (checked) {
-      products.value.add(id);
-    } else {
-      products.value.delete(id);
-    }
+const itemCheck = (id: number, checked: boolean) => {
+  if (checked) {
+    products.value.add(id);
   } else {
-    if (checked) {
-      variants.value.add(id);
-    } else {
-      variants.value.delete(id);
-    }
+    products.value.delete(id);
   }
 };
 
@@ -186,7 +174,7 @@ onMounted(async () => {
           res?.forEach((item) => {
             if (item.id == type.id) {
               item.checked = true;
-              variants.value.add(item.id);
+              products.value.add(item.id);
             }
           });
         });
@@ -218,6 +206,7 @@ onMounted(async () => {
           {{ nameError }}
         </span>
       </div>
+      {{ Array.from(products) }}
     </form>
   </div>
   <div
@@ -273,13 +262,13 @@ onMounted(async () => {
               v-for="item in attribute.attributes"
               @click="
                 item.checked = !item.checked;
-                itemCheck(item.id, item.checked, 'products');
+                itemCheck(item.id, item.checked);
               "
               class="w-full h-[44px] flex items-center justify-start gap-4 px-4 rounded-lg b-bg border border-c"
             >
               <UiCheckbox
                 v-model:model-value="item.checked"
-                @click="itemCheck(item.id, item.checked, 'products')"
+                @click="itemCheck(item.id, item.checked)"
               />
               <span>{{ item.name[defaultLanguage] }}</span>
             </div>
@@ -301,13 +290,13 @@ onMounted(async () => {
               v-for="item in attribute.attributes"
               @click="
                 item.checked = !item.checked;
-                itemCheck(item.id, item.checked, 'products');
+                itemCheck(item.id, item.checked);
               "
               class="w-full h-[44px] flex items-center justify-start gap-4 px-4 rounded-lg b-bg border border-c"
             >
               <UiCheckbox
                 v-model:model-value="item.checked"
-                @click="itemCheck(item.id, item.checked, 'products')"
+                @click="itemCheck(item.id, item.checked)"
               />
               <span>{{ item.name[defaultLanguage] }}</span>
             </div>

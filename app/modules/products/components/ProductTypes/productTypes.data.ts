@@ -30,3 +30,18 @@ export async function getProductTypeById(id: number) {
     console.error("Не удалось получить /admin/attribute-groups: ", error);
   }
 }
+
+export async function createProductType(body: {
+  id: number;
+  mappedAttributes: number[];
+}) {
+  const { $productTypesRep } = useNuxtApp();
+  const productTypesStore = useProductTypesStore();
+  try {
+    const res = await $productTypesRep.createProductType(body);
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.error("Не удалось получить /admin/attribute-groups: ", error);
+  }
+}
