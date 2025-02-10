@@ -6,6 +6,7 @@ export interface IAttributesStore {
   attributeMeta: IAttributeResponseMeta | null;
   attributeCreateAndEditModalType: string;
   attributeCreateAndEditModalEditId: number | null;
+  attributeCreateAndEditModalEditGroupType: string;
   attributeCreateAndEditModal: boolean;
   page: number;
   perPage: number;

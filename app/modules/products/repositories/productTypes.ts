@@ -1,5 +1,6 @@
 import type { ILoginStaff } from "~/types/Auth/auth.type";
 import type {
+  ICreateProductTypeId,
   IProductType,
   IProductTypeId,
   IProductTypeResponse,
@@ -77,11 +78,11 @@ export class ProductTypesRep {
     body: Record<string | number | symbol, any>,
     params?: Record<string, any>,
     headers?: Record<string, string>
-  ): Promise<ILoginStaff> {
+  ): Promise<ICreateProductTypeId> {
     const config = useRuntimeConfig();
     const authTokenCookie = useCookie("authToken");
     const authToken = authTokenCookie.value || "";
-    return await this.request<ILoginStaff>(
+    return await this.request<ICreateProductTypeId>(
       "POST",
       `${config.public.apiBaseUrl}/types`,
       {
@@ -107,11 +108,11 @@ export class ProductTypesRep {
     body: Record<string | number | symbol, any>,
     params?: Record<string, any>,
     headers?: Record<string, string>
-  ): Promise<ILoginStaff> {
+  ): Promise<ICreateProductTypeId> {
     const config = useRuntimeConfig();
     const authTokenCookie = useCookie("authToken");
     const authToken = authTokenCookie.value || "";
-    return await this.request<ILoginStaff>(
+    return await this.request<ICreateProductTypeId>(
       "PUT",
       `${config.public.apiBaseUrl}/types/${id}`,
       {

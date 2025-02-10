@@ -14,9 +14,10 @@ const route = useRoute();
 onMounted(async () => {
   await getAttributes(String(route.params.id));
 });
-const handleOpenCreteAttributeModal = (id: number) => {
+const handleOpenCreteAttributeModal = (id: number, attrType: string) => {
   attrStore.attributeCreateAndEditModalType = "edit";
   attrStore.attributeCreateAndEditModalEditId = id;
+  attrStore.attributeCreateAndEditModalEditGroupType = attrType;
   attrStore.attributeCreateAndEditModal = true;
   document.body.style.overflow = "hidden";
 };
@@ -152,7 +153,12 @@ const handleOpenCreteAttributeModal = (id: number) => {
                     class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium"
                   >
                     <p
-                      @click="handleOpenCreteAttributeModal(attr.id)"
+                      @click="
+                        handleOpenCreteAttributeModal(
+                          attr.id,
+                          attr.attribute_type
+                        )
+                      "
                       class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-c-primary-700 hover:text-c-primary-500 hover:underline"
                     >
                       <IconEdit05 />

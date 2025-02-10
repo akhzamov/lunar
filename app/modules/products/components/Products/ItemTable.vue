@@ -1,17 +1,25 @@
 <script lang="ts" setup>
 import { useProductsStore } from "~/modules/products/stores/products";
+import { getProducts } from "./products.data";
+import { useLangSettingsStore } from "~/stores/langSettings";
 
 const productsStore = useProductsStore();
+const langStore = useLangSettingsStore();
 const checkAll = ref(false);
 const deleteButton = ref(false);
 const productsFilterRef = ref<HTMLElement | null>(null);
 const productsFilterButtonRef = ref<HTMLElement | null>(null);
 const tableFilterRef = ref<HTMLElement | null>(null);
 const tableFilterButtonRef = ref<HTMLElement | null>(null);
+const skuDetail = ref(false);
+const skuDetailId = ref<number | null>(null);
 const totalPages = ref(50);
 const currentPage = ref(1);
 const productsSearch = "";
 const perPage = ref(1);
+const defaultLanguage = ref<string>(
+  langStore.languages?.find((language) => language.default === 1)?.code ?? ""
+);
 
 const handleClickOutsideProductsFilter = (event: MouseEvent) => {
   if (
@@ -45,9 +53,16 @@ const activeTableFilter = () => {
   productsStore.activeTableFilter = !productsStore.activeTableFilter;
 };
 
-onMounted(() => {
+const changePage = async (page: number) => {
+  await getProducts();
+  productsStore.filterList();
+};
+
+onMounted(async () => {
   document.addEventListener("click", handleClickOutsideProductsFilter);
   document.addEventListener("click", handleClickOutsideTableFilter);
+  await getProducts();
+  productsStore.filterList();
 });
 
 onBeforeUnmount(() => {
@@ -235,10 +250,16 @@ onBeforeUnmount(() => {
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <img :src="product.image" :alt="product.name" />
+                    <img
+                      :alt="product.attribute_data.name[defaultLanguage]"
+                      class="w-[50px]"
+                      src="https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+                    />
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span>{{ product.name }}</span>
+                    <span>{{
+                      product.attribute_data.name[defaultLanguage]
+                    }}</span>
                   </td>
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm"
@@ -248,17 +269,29 @@ onBeforeUnmount(() => {
                   </td>
                   <td
                     v-if="productsStore.skuTableShow"
+                    @mouseenter="
+                      {
+                        skuDetail = true;
+                        skuDetailId = product.id;
+                      }
+                    "
+                    @mouseleave="
+                      {
+                        skuDetail = false;
+                        skuDetailId = null;
+                      }
+                    "
                     class="relative px-6 py-4 whitespace-nowrap text-sm"
                   >
-                    <span
-                      @mouseenter="product.activeSkuList = true"
-                      @mouseleave="product.activeSkuList = false"
-                      class="cursor-pointer"
-                    >
+                    <span class="cursor-pointer">
                       {{ product.sku[0] }}
                     </span>
                     <div
-                      v-if="product.sku.length > 1 && product.activeSkuList"
+                      v-if="
+                        product.sku.length > 1 &&
+                        skuDetail &&
+                        skuDetailId == product.id
+                      "
                       class="sku-list absolute z-[30] top-[0] left-0 translate-y-[-70%] px-3 py-2 bg-c-gray-t-50 dark:bg-c-gray-t-700 rounded-md"
                     >
                       <template v-for="(sku, index) in product.sku">
@@ -271,16 +304,14 @@ onBeforeUnmount(() => {
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span>{{ product.warehouse }}</span>
+                    <span>{{ product.stock }}</span>
                   </td>
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm"
                     v-if="productsStore.productTypeTableShow"
                   >
                     <span>
-                      {{
-                        product.type == "new" ? "Новый тип продукта" : "Сток"
-                      }}
+                      {{ product.product_type }}
                     </span>
                   </td>
                   <td
@@ -302,9 +333,10 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <UiPerPage
-      :total-pages="totalPages"
-      v-model:current-page="currentPage"
-      v-model:per-page="perPage"
+      :total-pages="productsStore.productsListMeta?.total ?? 0"
+      v-model:current-page="productsStore.page"
+      v-model:per-page="productsStore.perPage"
+      @update:current-page="changePage($event)"
     />
   </div>
 </template>

@@ -16,6 +16,9 @@ const emit = defineEmits(["update:currentPage", "update:perPage"]);
 const selectPerPageMenu = ref(false);
 const page = ref(props.currentPage);
 const perPage = ref(props.perPage);
+const showTotalPage = computed(() =>
+  Math.ceil(props.totalPages / props.perPage)
+);
 
 const pageChange = () => {
   emit("update:currentPage", page.value);
@@ -65,12 +68,11 @@ watch(
       />
     </div>
     <UiPagination
-      v-if="totalPages > 1"
-      :totalPages="totalPages"
+      v-if="showTotalPage > 1"
+      :totalPages="showTotalPage"
       :currentPage="currentPage"
       v-model="page"
     />
-    <div v-if="totalPages <= 1"></div>
   </div>
 </template>
 

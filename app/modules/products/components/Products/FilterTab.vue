@@ -2,6 +2,18 @@
 import { useProductsStore } from "~/modules/products/stores/products";
 
 const productsStore = useProductsStore();
+const draftList = computed(() => {
+  const filtered = productsStore.productsList?.filter(
+    (item) => item.status == "draft"
+  );
+  return filtered;
+});
+const publishedList = computed(() => {
+  const filtered = productsStore.productsList?.filter(
+    (item) => item.status == "published"
+  );
+  return filtered;
+});
 watch(
   () => productsStore.activeFilterTab,
   () => {
@@ -25,7 +37,7 @@ watch(
       Все
     </div>
     <div
-      class="px-[14px] py-2 rounded-lg cursor-pointer"
+      class="px-[14px] py-2 rounded-lg cursor-pointer flex items-center gap-2"
       :class="{
         'bg-c-primary-25 dark:bg-c-gray-t-600 text-c-primary-800 dark:text-c-gray-t-25':
           productsStore.activeFilterTab == 2,
@@ -47,7 +59,7 @@ watch(
       <span
         class="text-12-med text-c-primary-400 px-2 py-[2px] bg-c-primary-500-8 rounded-md border border-c-primary-500"
       >
-        12
+        {{ draftList?.length }}
       </span>
     </div>
   </div>

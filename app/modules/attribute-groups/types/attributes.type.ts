@@ -30,6 +30,7 @@ export interface IAttribute {
 }
 
 export interface ICreateAttributeBody {
+  attributeType: string;
   handle: string;
   searchable: boolean;
   filterable: boolean;

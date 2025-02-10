@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { deleteAttributeGroupById } from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
+import { useAttributeGroupsStore } from "~/modules/attribute-groups/stores/attributeGroups";
 import { useAttributesStore } from "~/modules/attribute-groups/stores/attributes";
 import { useAlertStore } from "~/stores/alert";
 import type { IBreadcrumb } from "~/types/Others/breadcrumb.type";
@@ -13,6 +14,7 @@ useSeoMeta({
 
 const alertStore = useAlertStore();
 const attrStore = useAttributesStore();
+const attrGsStore = useAttributeGroupsStore();
 const route = useRoute();
 const router = useRouter();
 const breadcrumbs = reactive<IBreadcrumb[]>([
@@ -26,7 +28,6 @@ const breadcrumbs = reactive<IBreadcrumb[]>([
 ]);
 const deleteAttributeGroup = async () => {
   const res = await deleteAttributeGroupById(Number(route.params.id));
-  console.log(res);
   if (res?.message) {
     setTimeout(() => {
       alertStore.successAlert = {
@@ -54,7 +55,11 @@ const deleteAttributeGroup = async () => {
   }
 };
 const handleOpenCreteAttributeModal = () => {
-  attrStore.attributeCreateAndEditModalType = "new";
+  attrStore.attributeCreateAndEditModalType = "create";
+  attrStore.attributeCreateAndEditModalEditId =
+    attrGsStore.attributeGroup?.id ?? 0;
+  attrStore.attributeCreateAndEditModalEditGroupType =
+    attrGsStore.attributeGroup?.attributable_type ?? "";
   attrStore.attributeCreateAndEditModal = true;
   document.body.style.overflow = "hidden";
 };

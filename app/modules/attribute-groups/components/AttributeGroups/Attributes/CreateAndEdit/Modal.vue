@@ -83,6 +83,7 @@ const handleCloseProductsModal = () => {
   attrStore.attributeCreateAndEditModal = false;
   attrStore.attributeCreateAndEditModalEditId = null;
   attrStore.attributeCreateAndEditModalType = "";
+  attrStore.attributeCreateAndEditModalEditGroupType = "";
   document.body.style.overflow = "auto";
 };
 const onSubmit = handleSubmit(async (values) => {
@@ -98,6 +99,7 @@ const onSubmit = handleSubmit(async (values) => {
       return acc;
     }, {} as Record<string, string>);
   const body: ICreateAttributeBody = {
+    attributeType: attrStore.attributeCreateAndEditModalEditGroupType,
     handle: values.handle,
     searchable: values.searchable,
     filterable: values.filtrable,
@@ -378,7 +380,7 @@ onMounted(async () => {
         <div class="flex items-center justify-start gap-3 mt-6">
           <UiButton
             @click="createAttr()"
-            v-if="attrStore.attributeCreateAndEditModalType == 'new'"
+            v-if="attrStore.attributeCreateAndEditModalType == 'create'"
             bgColor="bg-c-primary-500"
             hoverBgColor="bg-c-primary-600"
             text="Создать"
@@ -387,7 +389,7 @@ onMounted(async () => {
           />
           <UiButton
             @click="createAndReopenAttr()"
-            v-if="attrStore.attributeCreateAndEditModalType == 'new'"
+            v-if="attrStore.attributeCreateAndEditModalType == 'create'"
             hoverBgColor="bg-c-gray-t-100 dark:bg-c-gray-t-700"
             text="Создать и открыт новое"
             py="py-2"

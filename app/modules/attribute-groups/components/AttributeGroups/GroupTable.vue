@@ -2,9 +2,11 @@
 import { useProductsStore } from "~/modules/products/stores/products";
 import { useAttributeGroupsStore } from "~/modules/attribute-groups/stores/attributeGroups";
 import { getAttributeGroups } from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
+import { useAttributesStore } from "../../stores/attributes";
 
 const productsStore = useProductsStore();
 const attrGsStore = useAttributeGroupsStore();
+const attrStore = useAttributesStore();
 const checkAll = ref(false);
 const deleteButton = ref(false);
 

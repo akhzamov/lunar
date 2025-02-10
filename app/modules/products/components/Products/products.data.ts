@@ -1,158 +1,21 @@
 import type { IProduct } from "~/modules/products/types/product.type";
+import { useProductsStore } from "../../stores/products";
 
-export const productsList: IProduct[] = [
-	{
-		id: 1,
-		status: "published",
-		image: "/img/items/item-1.jpg",
-		name: "Brutal Wear C9",
-		brand: "STO",
-		sku: [
-			"LEV-856",
-			"LEV-856-32 S (L30)",
-			"LEV-856-34 S (L30)",
-			"LEV-856-36 S (L30)",
-		],
-		warehouse: 2000,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 2,
-		status: "published",
-		image: "/img/items/item-2.jpg",
-		name: "Black Panther evo",
-		brand: "Nooke",
-		sku: ["CONV-201"],
-		warehouse: 1200,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 3,
-		status: "published",
-		image: "/img/items/item-3.jpg",
-		name: "Khaki soft",
-		brand: "Darrel Soft",
-		sku: ["FooKoo-980", "FooKoo-980", "FooKoo-980"],
-		warehouse: 2000,
-		type: "stock",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 4,
-		status: "published",
-		image: "/img/items/item-4.jpg",
-		name: "Hoodie Moody",
-		brand: "Huige",
-		sku: ["FooKoo-980", "FooKoo-980"],
-		warehouse: 1800,
-		type: "stock",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 5,
-		status: "draft",
-		image: "/img/items/item-5.jpg",
-		name: "Hoodie Moody Simple",
-		brand: "RADUCT",
-		sku: ["FooKoo-980"],
-		warehouse: 100,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 6,
-		status: "draft",
-		image: "/img/items/item-6.jpg",
-		name: "Lius Cap",
-		brand: "LIUS",
-		sku: ["RUG-1120", "RUG-1120"],
-		warehouse: 4300,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 7,
-		status: "published",
-		image: "/img/items/item-1.jpg",
-		name: "Brutal Wear C9",
-		brand: "STO",
-		sku: [
-			"LEV-856",
-			"LEV-856-32 S (L30)",
-			"LEV-856-34 S (L30)",
-			"LEV-856-36 S (L30)",
-		],
-		warehouse: 2000,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 8,
-		status: "published",
-		image: "/img/items/item-2.jpg",
-		name: "Black Panther evo",
-		brand: "Nooke",
-		sku: ["CONV-201"],
-		warehouse: 1200,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 9,
-		status: "published",
-		image: "/img/items/item-3.jpg",
-		name: "Khaki soft",
-		brand: "Darrel Soft",
-		sku: ["FooKoo-980", "FooKoo-980", "FooKoo-980"],
-		warehouse: 2000,
-		type: "stock",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 10,
-		status: "published",
-		image: "/img/items/item-4.jpg",
-		name: "Hoodie Moody",
-		brand: "Huige",
-		sku: ["FooKoo-980", "FooKoo-980"],
-		warehouse: 1800,
-		type: "stock",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 11,
-		status: "draft",
-		image: "/img/items/item-5.jpg",
-		name: "Hoodie Moody Simple",
-		brand: "RADUCT",
-		sku: ["FooKoo-980"],
-		warehouse: 100,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-	{
-		id: 12,
-		status: "draft",
-		image: "/img/items/item-6.jpg",
-		name: "Lius Cap",
-		brand: "LIUS",
-		sku: ["RUG-1120", "RUG-1120"],
-		warehouse: 4300,
-		type: "new",
-		checked: false,
-		activeSkuList: false,
-	},
-];
+export async function getProducts() {
+  const { $productsRep } = useNuxtApp();
+  const productsStore = useProductsStore();
+  try {
+    const res = await $productsRep.getProducts({
+      page: productsStore.page,
+      per_page: productsStore.perPage,
+    });
+    res.data.forEach((item) => {
+      item.checked = false;
+    });
+    productsStore.productsList = res.data;
+    productsStore.productsListMeta = res.meta;
+  } catch (error) {
+    console.error("Не удалось получить /admin/products/paginate: ", error);
+    console.log(error);
+  }
+}

@@ -1,13 +1,15 @@
 import { defineStore } from "pinia";
 import type { IProductStore } from "~/modules/products/types/productStore.type";
 import type { IProduct } from "~/modules/products/types/product.type";
-import { productsList } from "~/modules/products/components/Products/products.data";
 
 export const useProductsStore = defineStore("products", {
   state: (): IProductStore => ({
+    page: 1,
+    perPage: 10,
     activeFilterTab: 1,
-    productsList: productsList,
-    filteredProductsList: productsList,
+    productsList: null,
+    filteredProductsList: null,
+    productsListMeta: null,
     activeProductsFilter: false,
     activeTableFilter: false,
     brandTableShow: true,
@@ -23,14 +25,16 @@ export const useProductsStore = defineStore("products", {
           this.filteredProductsList = this.productsList; // Все товары
           break;
         case 2:
-          this.filteredProductsList = this.productsList.filter(
-            (product) => product.status === "published"
-          ); // Опубликованные товары
+          this.filteredProductsList =
+            this.productsList?.filter(
+              (product) => product.status === "published"
+            ) ?? []; // Опубликованные товары
           break;
         case 3:
-          this.filteredProductsList = this.productsList.filter(
-            (product) => product.status === "draft"
-          ); // Черновики
+          this.filteredProductsList =
+            this.productsList?.filter(
+              (product) => product.status === "draft"
+            ) ?? []; // Черновики
           break;
         default:
           this.filteredProductsList = this.productsList; // По умолчанию все товары

@@ -17,6 +17,17 @@ export interface IProductTypeId {
     | { id: number; handle: string; name: Record<string, string> }[]
     | [];
 }
+export interface ICreateProductTypeId {
+  id: number;
+  name: string;
+  product_attributes:
+    | { id: number; handle: string; name: Record<string, string> }[]
+    | [];
+  products_count: number;
+  variant_attributes:
+    | { id: number; handle: string; name: Record<string, string> }[]
+    | [];
+}
 
 export interface IProductTypeResponseLinks {
   first: string | null;

@@ -79,7 +79,6 @@ const updateNameStructure = () => {
 };
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log("Submitted:", values);
   try {
     const body: any = {
       attributableType: values.selectedType,

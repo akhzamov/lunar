@@ -1,19 +1,15 @@
 <script lang="ts" setup>
-import { useProductsStore } from "~/modules/products/stores/products";
 import { useAttributeGroupsStore } from "~/modules/attribute-groups/stores/attributeGroups";
-import {
-  createAttributeGroup,
-  getAttributeGroupById,
-  getAttributeGroups,
-  updateAttributeGroupById,
-} from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
+import { getAttributeGroups } from "~/modules/attribute-groups/components/AttributeGroups/attributeGroups.data";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
-import { useMainStore } from "~/stores/main";
 import { useAlertStore } from "~/stores/alert";
-import { getProductTypeById } from "../productTypes.data";
+import {
+  createProductType,
+  getProductTypeById,
+  updateProductTypeById,
+} from "../productTypes.data";
 import { getAttributes } from "~/modules/attribute-groups/components/AttributeGroups/attributes.data";
-import { useAttributesStore } from "~/modules/attribute-groups/stores/attributes";
 import { useProductTypesStore } from "~/modules/products/stores/productTypes";
 import { useLangSettingsStore } from "~/stores/langSettings";
 
@@ -24,63 +20,31 @@ const props = withDefaults(
   {}
 );
 
-const { $debounce, $toHandle } = useNuxtApp();
 const attrGsStore = useAttributeGroupsStore();
-const attStore = useAttributesStore();
-const mainStore = useMainStore();
 const alertStore = useAlertStore();
 const langStore = useLangSettingsStore();
 const productTypesStore = useProductTypesStore();
 const router = useRouter();
 const route = useRoute();
-const typesMenu = ref(false);
 const productTypesVariants = ref(false);
 const defaultLanguage =
   langStore.languages?.find((language) => language.default === 1)?.code || "en";
-const attrGroupProductId = computed(() => {
-  return attrGsStore.attributeGroups
-    ? attrGsStore.attributeGroups
-        .find((item) => item.attributable_type == "product")
-        ?.id.toString() || ""
-    : "";
-});
-const attrGroupVariantId = computed(() => {
-  return attrGsStore.attributeGroups
-    ? attrGsStore.attributeGroups
-        .find((item) => item.attributable_type == "product_variant")
-        ?.id.toString() || ""
-    : "";
-});
-const productTypeTitle = computed(() => {
-  if (!attrGsStore.attributeGroups) {
-    return "";
-  }
-
-  const attributableType = productTypesVariants.value
-    ? "product_variant"
-    : "product";
-
-  const attributeGroup = attrGsStore.attributeGroups.find(
-    (item) => item.attributable_type === attributableType
-  );
-
-  return attributeGroup?.name?.[defaultLanguage] || "";
-});
 
 const schema = yup.object({
   name: yup.string().required("Введите имя"),
-  products: yup.array(),
-  variants: yup.array(),
+  mappedAttributes: yup
+    .array()
+    .of(yup.number())
+    .nullable()
+    .transform((value) => (value instanceof Set ? Array.from(value) : value)),
 });
 interface ISchemaForm {
   name: string;
-  products: Set<number>;
-  variants: Set<number>;
+  mappedAttributes: Set<number>;
 }
 const initialValues: ISchemaForm = {
   name: "",
-  products: new Set(),
-  variants: new Set(),
+  mappedAttributes: new Set(),
 };
 const { handleSubmit } = useForm<ISchemaForm>({
   validationSchema: schema,
@@ -88,13 +52,20 @@ const { handleSubmit } = useForm<ISchemaForm>({
   validateOnMount: false,
 });
 const { value: name, errorMessage: nameError } = useField<string>("name");
-const { value: products, errorMessage: productsError } =
-  useField<Set<number>>("products");
-const { value: variants, errorMessage: variantsError } =
-  useField<Set<number>>("variants");
+const { value: mappedAttributes, errorMessage: mappedAttributesError } =
+  useField<Set<number>>("mappedAttributes");
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log("Submitted:", values);
+  try {
+    const body: any = {
+      name: values.name,
+      mappedAttributes: Array.from(values.mappedAttributes),
+    };
+    const id = Number(route.params.id);
+    return props.type == "edit"
+      ? await updateProductTypeById(id, body)
+      : createProductType(body);
+  } catch (error) {}
 });
 
 const handleAction = async ({
@@ -122,7 +93,7 @@ const handleAction = async ({
 const createAttribute = () =>
   handleAction({
     successMessage: "Группа атрибутов создана успешно",
-    redirectCallback: () => router.push("/attribute-groups"),
+    redirectCallback: () => router.push("/product-types"),
   });
 const createAndReopenAttribute = () =>
   handleAction({
@@ -132,52 +103,68 @@ const createAndReopenAttribute = () =>
 const editAttribute = () =>
   handleAction({
     successMessage: "Группа атрибутов изменена успешно",
-    redirectCallback: () => router.go(1),
+    redirectCallback: () => router.push("/product-types"),
   });
 
 const itemCheck = (id: number, checked: boolean) => {
   if (checked) {
-    products.value.add(id);
+    mappedAttributes.value.add(id);
   } else {
-    products.value.delete(id);
+    mappedAttributes.value.delete(id);
   }
 };
 
 onMounted(async () => {
-  if (props.type == "edit") {
+  if (props.type === "edit") {
     await getProductTypeById(Number(route.params.id));
     name.value = productTypesStore.productType?.name ?? "";
+  } else if (props.type === "create") {
+    mappedAttributes.value.clear();
   }
+
   await getAttributeGroups();
   if (attrGsStore.attributeGroups) {
     productTypesStore.productAttributes = [];
     productTypesStore.variantsAttributes = [];
+
+    if (props.type !== "edit") {
+      mappedAttributes.value.clear();
+    }
+
     attrGsStore.attributeGroups.forEach(async (item) => {
-      if (item.attributable_type == "product") {
+      if (item.attributable_type === "product") {
         const res = await getAttributes(item.id.toString());
-        productTypesStore.productType?.product_attributes.forEach((type) => {
-          res?.forEach((item) => {
-            if (item.id == type.id) {
-              item.checked = true;
-              products.value.add(item.id);
-            }
+
+        if (props.type === "edit") {
+          productTypesStore.productType?.product_attributes.forEach((type) => {
+            res?.forEach((attr) => {
+              if (attr.id === type.id) {
+                attr.checked = true;
+                mappedAttributes.value.add(attr.id);
+              }
+            });
           });
-        });
+        }
+
         const attributes = {
           title: item.name[defaultLanguage] ?? "",
           attributes: res ?? [],
         };
         productTypesStore.productAttributes.push(attributes);
-      } else if (item.attributable_type == "product_variant") {
+      } else if (item.attributable_type === "product_variant") {
         const res = await getAttributes(item.id.toString());
-        productTypesStore.productType?.product_attributes.forEach((type) => {
-          res?.forEach((item) => {
-            if (item.id == type.id) {
-              item.checked = true;
-              products.value.add(item.id);
-            }
+
+        if (props.type === "edit") {
+          productTypesStore.productType?.variant_attributes.forEach((type) => {
+            res?.forEach((attr) => {
+              if (attr.id === type.id) {
+                attr.checked = true;
+                mappedAttributes.value.add(attr.id);
+              }
+            });
           });
-        });
+        }
+
         const attributes = {
           title: item.name[defaultLanguage] ?? "",
           attributes: res ?? [],
@@ -186,6 +173,12 @@ onMounted(async () => {
       }
     });
   }
+});
+
+onUnmounted(() => {
+  productTypesStore.productAttributes = [];
+  productTypesStore.variantsAttributes = [];
+  mappedAttributes.value.clear();
 });
 </script>
 
@@ -206,7 +199,6 @@ onMounted(async () => {
           {{ nameError }}
         </span>
       </div>
-      {{ Array.from(products) }}
     </form>
   </div>
   <div
@@ -250,7 +242,7 @@ onMounted(async () => {
       <template v-if="!productTypesVariants">
         <div
           v-for="attribute in productTypesStore.productAttributes"
-          class="w-full flex flex-col items-start justify-center border border-c rounded-xl mt-6 p-6"
+          class="w-full flex flex-col items-start justify-center border border-c rounded-xl mt-6 mb-3 p-6"
         >
           <div class="flex items-center justify-start gap-2 z-[90]">
             <h2 class="text-xl">{{ attribute.title }}</h2>
@@ -278,7 +270,7 @@ onMounted(async () => {
       <template v-if="productTypesVariants">
         <div
           v-for="attribute in productTypesStore.variantsAttributes"
-          class="w-full flex flex-col items-start justify-center border border-c rounded-xl mt-6 p-6"
+          class="w-full flex flex-col items-start justify-center border border-c rounded-xl mt-6 mb-3 p-6"
         >
           <div class="flex items-center justify-start gap-2 z-[90]">
             <h2 class="text-xl">{{ attribute.title }}</h2>

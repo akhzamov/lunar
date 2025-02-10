@@ -8,14 +8,14 @@ import { ProductTypesRep } from "~/modules/products/repositories/productTypes";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const authRep = new AuthRep();
-  const productRep = new ProductsRep();
+  const productsRep = new ProductsRep();
   const attributeRep = new AttributeRep();
   const attributeGroupRep = new AttributeGroupRep();
   const langSettingsRep = new LangSettingsRep();
   const productTypesRep = new ProductTypesRep();
 
   nuxtApp.provide("authRep", authRep);
-  nuxtApp.provide("productRep", productRep);
+  nuxtApp.provide("productsRep", productsRep);
   nuxtApp.provide("attributeRep", attributeRep);
   nuxtApp.provide("attributeGroupRep", attributeGroupRep);
   nuxtApp.provide("langSettingsRep", langSettingsRep);

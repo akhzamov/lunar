@@ -9,6 +9,7 @@ export const useAttributesStore = defineStore("attributes", {
     attributeMeta: null,
     attributeCreateAndEditModalType: "",
     attributeCreateAndEditModalEditId: null,
+    attributeCreateAndEditModalEditGroupType: "",
     attributeCreateAndEditModal: false,
     page: 1,
     perPage: 10,
